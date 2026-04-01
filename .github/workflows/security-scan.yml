@@ -32,11 +32,11 @@ jobs:
 
       - name: Build system closure
         run: |
-          nix build .#nixosConfigurations.honor.config.system.build.toplevel --no-link
+          nix build .#nixosConfigurations.honor.config.system.build.toplevel --print-out-paths > toplevel-path.txt
 
       - name: Get closure paths
         run: |
-          nix-store -qR result > closure-paths.txt
+          nix-store -qR $(cat toplevel-path.txt) > closure-paths.txt
 
       - name: Install Grype
         run: |
