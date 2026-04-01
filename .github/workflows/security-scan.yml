@@ -10,25 +10,43 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  GRYPE_VERSION: "v0.79.0"
+  SYFT_VERSION: "v1.11.0"
+
 jobs:
   grype-scan:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
     steps:
       - uses: actions/checkout@v4
 
-      - uses: cachix/install-nix-action@v27
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
         with:
           nix_path: nixpkgs=channel:nixos-unstable
+          extra_nix_config: |
+            cores = 0
+            max-jobs = auto
 
-      - uses: actions/cache@v4
+      - name: Cache Nix store
+        uses: actions/cache@v4
         with:
           path: |
             ~/.local/state/nix
             /nix/store
-          key: grype-scan-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          key: nix-${{ runner.os }}-${{ hashFiles('flake.lock') }}
           restore-keys: |
-            grype-scan-${{ runner.os }}-
+            nix-${{ runner.os }}-
+
+      - name: Cache Grype database
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/grype/db
+          key: grype-db-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            grype-db-${{ runner.os }}-
 
       - name: Build system closure
         run: |
@@ -37,32 +55,110 @@ jobs:
       - name: Get closure paths
         run: |
           nix-store -qR $(cat toplevel-path.txt) > closure-paths.txt
+          wc -l closure-paths.txt
 
-      - name: Install Grype
+      - name: Install security tools
         run: |
-          curl -sSfL https://github.com/anchore/grype/releases/download/v0.79.0/grype_0.79.0_linux_amd64.tar.gz | tar -xzf - -C /usr/local/bin
+          curl -sSfL https://github.com/anchore/grype/releases/download/${{ env.GRYPE_VERSION }}/grype_${{ env.GRYPE_VERSION }}_linux_amd64.tar.gz | tar -xzf - -C /usr/local/bin grype
+          curl -sSfL https://github.com/anchore/syft/releases/download/${{ env.SYFT_VERSION }}/syft_${{ env.SYFT_VERSION }}_linux_amd64.tar.gz | tar -xzf - -C /usr/local/bin syft
 
-      - name: Run Grype
+      - name: Generate SBOM
         run: |
           mkdir -p scan-dir
           while IFS= read -r path; do ln -sf "$path" "scan-dir/$(basename "$path")"; done < closure-paths.txt
-          grype dir:scan-dir -o sarif > grype-results.sarif --severity-cutoff low || [ $? -eq 1 ]
+          syft dir:scan-dir -o spdx-json > sbom.spdx.json
+          syft dir:scan-dir -o cyclonedx-json > sbom.cyclonedx.json
 
-      - name: Upload results
+      - name: Run Grype scan
+        id: grype
+        run: |
+          set +e
+          grype sbom:sbom.spdx.json -o sarif --severity-cutoff low --fail-on medium > grype-results.sarif
+          grype_exit=$?
+          echo "grype_exit_code=${grype_exit}" >> $GITHUB_OUTPUT
+          set -e
+          
+          if [ ! -s grype-results.sarif ]; then
+            echo "::warning::SARIF file empty, creating minimal valid SARIF"
+            cat > grype-results.sarif << 'EOF'
+          {
+            "$schema": "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
+            "version": "2.1.0",
+            "runs": [{
+              "tool": {
+                "driver": {
+                  "name": "Grype",
+                  "informationUri": "https://github.com/anchore/grype",
+                  "version": "${{ env.GRYPE_VERSION }}"
+                }
+              },
+              "results": []
+            }]
+          }
+          EOF
+          fi
+          
+          echo "SARIF file size: $(wc -c < grype-results.sarif) bytes"
+
+      - name: Validate SARIF
+        run: |
+          if command -v jq &> /dev/null; then
+            if jq empty grype-results.sarif 2>/dev/null; then
+              echo "SARIF is valid JSON"
+            else
+              echo "::error::SARIF is not valid JSON"
+              cat grype-results.sarif
+              exit 1
+            fi
+          else
+            echo "jq not available, skipping JSON validation"
+          fi
+
+      - name: Upload SARIF results
         uses: github/codeql-action/upload-sarif@v4
+        if: always()
         with:
           sarif_file: grype-results.sarif
+          category: grype
 
-      - name: Display scan summary
-        run: |
-          cat grype-results.sarif | grep -o '"level":"[^"]*"' | sort | uniq -c || true
+      - name: Upload SBOM artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-reports
+          path: |
+            sbom.spdx.json
+            sbom.cyclonedx.json
+            grype-results.sarif
+          retention-days: 30
 
-      - name: Check for critical/high vulnerabilities
+      - name: Display vulnerability summary
+        if: always()
         run: |
-          critical=$(cat grype-results.sarif | grep -c '"critical"' || true)
-          high=$(cat grype-results.sarif | grep -c '"high"' || true)
-          echo "Critical: $critical, High: $high"
-          if [ "$critical" -gt 0 ] || [ "$high" -gt 10 ]; then
-            echo "Found critical or many high vulnerabilities"
-            exit 1
+          if command -v jq &> /dev/null; then
+            echo "## Vulnerability Summary" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            total=$(jq '.runs[0].results | length' grype-results.sarif 2>/dev/null || echo "0")
+            critical=$(jq '[.runs[0].results[] | select(.level == "critical")] | length' grype-results.sarif 2>/dev/null || echo "0")
+            high=$(jq '[.runs[0].results[] | select(.level == "high")] | length' grype-results.sarif 2>/dev/null || echo "0")
+            medium=$(jq '[.runs[0].results[] | select(.level == "medium")] | length' grype-results.sarif 2>/dev/null || echo "0")
+            low=$(jq '[.runs[0].results[] | select(.level == "low")] | length' grype-results.sarif 2>/dev/null || echo "0")
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "| Severity | Count |" >> $GITHUB_STEP_SUMMARY
+            echo "|----------|-------|" >> $GITHUB_STEP_SUMMARY
+            echo "| Critical | $critical |" >> $GITHUB_STEP_SUMMARY
+            echo "| High | $high |" >> $GITHUB_STEP_SUMMARY
+            echo "| Medium | $medium |" >> $GITHUB_STEP_SUMMARY
+            echo "| Low | $low |" >> $GITHUB_STEP_SUMMARY
+            echo "| **Total** | **$total** |" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "**Vulnerability Counts:** Critical=$critical, High=$high, Medium=$medium, Low=$low"
+          else
+            grep -o '"level":"[^"]*"' grype-results.sarif | sort | uniq -c || true
           fi
+
+      - name: Fail on critical/high vulnerabilities
+        if: steps.grype.outputs.grype_exit_code != '0'
+        run: |
+          echo "::error::Grype found vulnerabilities with severity >= medium (exit code: ${{ steps.grype.outputs.grype_exit_code }})"
+          exit ${{ steps.grype.outputs.grype_exit_code }}
