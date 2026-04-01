@@ -8,6 +8,23 @@
   ];
 
   programs = {
+    vscode = {
+      enable = true;
+      package = pkgs.vscodium;
+      profiles.default.extensions = with pkgs.vscode-extensions; [
+        shd101wyy.markdown-preview-enhanced
+        jnoortheen.nix-ide
+        redhat.vscode-yaml
+        ms-azuretools.vscode-docker
+        ms-kubernetes-tools.vscode-kubernetes-tools
+        ms-vscode-remote.remote-containers
+        kilocode.kilo-code
+        ms-python.python
+        ms-python.vscode-pylance
+        njpwerner.autodocstring
+        yoavbls.pretty-ts-errors
+      ];
+    };
     git = {
       enable = true;
       settings = {
@@ -35,6 +52,45 @@
           compression = true;
         };
       };
+    };
+    zed-editor = {
+      enable = true;
+      package = pkgs.zed-editor;
+      extensions = [
+        "nix"
+        "toml"
+        "dockerfile"
+        "json"
+        "aye"
+        "opencode"
+      ];
+      userSettings = {
+        features.copilot = false;
+        telemetry.metrics = false;
+        vim_mode = false;
+        ui_font_size = 16;
+        buffer_font_size = 16;
+        theme = "Aye";
+        format_on_save = "on";
+        tab_size = 2;
+        soft_tabs = true;
+        prettier.allowed = true;
+      };
+      userKeymaps = [
+        {
+          context = "Workspace";
+          bindings = {
+            "ctrl-shift-t" = "workspace::NewTerminal";
+          };
+        }
+      ];
+      extraPackages = with pkgs; [
+        nixd
+        nil
+        alejandra
+        statix
+        deadnix
+      ];
     };
   };
 }
