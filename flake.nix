@@ -8,6 +8,10 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     alejandra.url = "github:kamadorueda/alejandra";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
@@ -16,6 +20,7 @@
     home-manager,
     disko,
     alejandra,
+    lanzaboote,
   }: let
     username = "heap";
     hostname = "honor";
@@ -30,6 +35,7 @@
         modules = [
           ./modules/honor/default.nix
           disko.nixosModules.default
+          lanzaboote.nixosModules.lanzaboote
           {nixpkgs.config.allowUnfree = true;}
 
           home-manager.nixosModules.home-manager
