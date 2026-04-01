@@ -6,13 +6,7 @@
     ../features/browser.nix
   ];
 
-  boot = {
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
-    kernelPackages = pkgs.linuxPackages_latest;
-  };
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   networking.hostName = "honor";
   networking.networkmanager.enable = true;
