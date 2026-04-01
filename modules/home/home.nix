@@ -14,6 +14,7 @@
       profiles.default.extensions = with pkgs.vscode-extensions; [
         shd101wyy.markdown-preview-enhanced
         jnoortheen.nix-ide
+        redhat.vscode-yaml
         ms-azuretools.vscode-docker
         ms-kubernetes-tools.vscode-kubernetes-tools
         ms-vscode-remote.remote-containers
