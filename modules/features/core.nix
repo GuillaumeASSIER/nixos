@@ -27,12 +27,13 @@
     };
   };
 
+  services.netbird.enable = true;
+
   networking.firewall = {
     enable = true;
     allowPing = true;
     logReversePathDrops = true;
     checkReversePath = "loose";
-    # Par défaut, bloquer tout le trafic entrant
     allowedTCPPorts = [22];
     allowedUDPPorts = [22];
   };
