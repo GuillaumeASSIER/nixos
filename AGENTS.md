@@ -7,29 +7,31 @@ This is a NixOS configuration project managed with flakes.
 Personal NixOS configuration for a laptop (hostname: `honor`), featuring:
 - **Desktop**: GNOME + GDM + Wayland
 - **Audio**: PipeWire with PulseAudio passthrough
-- **Virtualisation**: Docker + libvirt
-- **Security**: Fingerprint reader (fprintd), firewalld
+- **Virtualisation / Containers**: Docker + libvirt + Podman
+- **Security**: AppArmor, fail2ban, firewall, auditd
 - **Firmware**: Custom DSDT overlay for Honor laptop
+- **Browser**: Firefox & Chromium with policies (uBlock, Bitwarden)
+- **Dev tools**: neovim, git, lazygit, opencode, kubectl, terraform, etc.
 
 ## Structure
 
 ```
 .
-├── flake.nix              # Main flake entry
+├── flake.nix              # Main flake entry (inputs, outputs, formatter)
 ├── flake.lock             # Dependency lock file
 ├── modules/
 │   ├── honor/             # Machine-specific configuration
-│   │   ├── default.nix
-│   │   ├── configuration.nix
-│   │   └── hardware.nix
-│   ├── home/               # Home-manager user configuration
-│   │   └── home.nix
-│   └── features/           # Feature modules
-│       ├── browser.nix
-│       ├── core.nix
-│       ├── desktop.nix
-│       ├── ide.nix
-│       └── server.nix
+│   │   ├── default.nix    # Entry point for honor machine
+│   │   ├── configuration.nix  # Main system config
+│   │   └── hardware.nix   # Hardware & DSDT overlay config
+│   ├── home/              # Home-manager user configuration
+│   │   └── home.nix       # User-level packages & programs
+│   └── features/          # Feature modules
+│       ├── browser.nix    # Firefox & Chromium policies
+│       ├── core.nix       # Security (apparmor, fail2ban, firewall, ssh)
+│       ├── desktop.nix    # GNOME, GDM, PipeWire, Flatpak
+│       ├── ide.nix        # Git, lazygit, opencode
+│       └── server.nix     # Core dumps, audit logging
 ```
 
 ## Common Commands
@@ -43,6 +45,9 @@ nix flake update
 
 # Build system (without switching)
 sudo nixos-rebuild build --flake .#honor
+
+# Format nix files
+nix fmt
 ```
 
 ## Notes
@@ -51,4 +56,5 @@ sudo nixos-rebuild build --flake .#honor
 - Hostname: `honor`
 - Uses `nixos-unstable` channel
 - Unfree packages enabled
-- Uses `disko` for disk partitioning
+- Uses `disko` for disk partitioning (currently commented out, uses ext4)
+- Dev shell includes: alejandra, statix, deadnix
