@@ -1,0 +1,77 @@
+name: Nix Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  nix-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/state/nix
+            /nix/store
+          key: nix-lint-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            nix-lint-${{ runner.os }}-
+
+      - name: Format and check formatting
+        run: |
+          nix run .#alejandra -- $(find . -name '*.nix' -not -path './.git/*')
+          if ! git diff --quiet; then
+            echo "Files not formatted. Run 'alejandra' locally and commit."
+            git diff
+            exit 1
+          fi
+
+      - name: Run statix
+        run: |
+          output=$(nix run .#statix -- check . 2>&1 || true)
+          echo "$output"
+          if echo "$output" | grep -qi "error:"; then
+            exit 1
+          fi
+
+      - name: Check for dead code
+        run: |
+          nix run .#deadnix -- .
+
+      - name: Validate flake
+        run: |
+          nix flake check --no-build .
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v27
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/state/nix
+            /nix/store
+          key: nix-build-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            nix-build-${{ runner.os }}-
+
+      - name: Build flake
+        run: |
+          nix flake check --no-build . 2>&1 || true
