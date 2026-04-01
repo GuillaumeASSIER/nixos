@@ -5,9 +5,21 @@
     gh
     tea
     glab
+    zed-editor
   ];
 
   programs = {
+    vscode = {
+      enable = true;
+      package = pkgs.vscodium;
+      profiles.default.extensions = with pkgs.vscode-extensions; [
+        shd101wyy.markdown-preview-enhanced
+        jnoortheen.nix-ide
+        ms-azuretools.vscode-docker
+        ms-kubernetes-tools.vscode-kubernetes-tools
+        ms-vscode-remote.remote-containers
+      ];
+    };
     git = {
       enable = true;
       settings = {
