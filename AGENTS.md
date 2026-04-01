@@ -50,6 +50,15 @@ sudo nixos-rebuild build --flake .#honor
 nix fmt
 ```
 
+## MCP Integration
+
+This project includes MCP-NixOS integration (`.mcp.json`) for AI assistants. It provides access to:
+- NixOS packages and options search
+- Home Manager options
+- FlakeHub registry
+- Noogle (Nix function documentation)
+- Package version history via NixHub
+
 ## Notes
 
 - Username: `heap`
