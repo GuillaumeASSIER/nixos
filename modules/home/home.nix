@@ -5,7 +5,6 @@
     gh
     tea
     glab
-    zed-editor
   ];
 
   programs = {
