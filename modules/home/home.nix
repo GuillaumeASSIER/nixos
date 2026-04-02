@@ -25,6 +25,8 @@
         ms-python.vscode-pylance
         njpwerner.autodocstring
         yoavbls.pretty-ts-errors
+        github.vscode-pull-request-github
+        gitlab.gitlab-workflow
       ];
     };
     git = {
