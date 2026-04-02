@@ -5,6 +5,8 @@
     gh
     tea
     glab
+    discord
+    thunderbird
   ];
 
   programs = {
