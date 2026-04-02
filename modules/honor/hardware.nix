@@ -15,6 +15,7 @@
 in {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
+    ./disko.nix
   ];
 
   boot = {
@@ -61,77 +62,6 @@ in {
   environment.sessionVariables = {
     LIBVA_DRIVER_NAME = "iHD";
   };
-
-  # disko.devices = {
-  #   disk.nvme0n1 = {
-  #     device = "/dev/nvme0n1";
-  #     type = "disk";
-  #     content = {
-  #       type = "gpt";
-  #       partitions = {
-  #           ESP = {
-  #             size = "512M";
-  #             type = "EF00";
-  #             content = {
-  #               type = "filesystem";
-  #               format = "vfat";
-  #               mountpoint = "/boot";
-  #               mountOptions = [ "defaults" ];
-  #             };
-  #           };
-  #         luks = {
-  #           size = "100%";
-  #           type = "8309";
-  #           content = {
-  #             type = "luks";
-  #             name = "crypted";
-  #             settings = {
-  #               allowDiscards = true;
-  #             };
-  #
-  #             content = {
-  #               type = "btrfs";
-  #               extraArgs = [ "-f" ];
-  #               subvolumes = {
-  #                 "/root" = {
-  #                   mountpoint = "/";
-  #                   mountOptions = [ "compress=zstd" "noatime" ];
-  #                 };
-  #                 "/home" = {
-  #                   mountpoint = "/home";
-  #                   mountOptions = [ "compress=zstd" "noatime" ];
-  #                 };
-  #                 "/var/log" = {
-  #                   mountpoint = "/var/log";
-  #                   mountOptions = [ "compress=zstd" "noatime" ];
-  #                 };
-  #                 "/nix" = {
-  #                   mountpoint = "/nix";
-  #                   mountOptions = [ "compress=zstd" "noatime" ];
-  #                 };
-  #               };
-  #             };
-  #           };
-  #         };
-  #       };
-  #     };
-  #   };
-  # };
-
-  fileSystems."/" = {
-    device = "/dev/disk/by-uuid/f56a35c1-7cf7-4cd0-84d7-bad4e5e7e0ca";
-    fsType = "ext4";
-  };
-
-  fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/7C6B-B4BE";
-    fsType = "vfat";
-    options = ["fmask=0077" "dmask=0077"];
-  };
-
-  swapDevices = [
-    {device = "/dev/disk/by-uuid/724ae94f-9d67-4192-95d2-777ed6b72fb4";}
-  ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
