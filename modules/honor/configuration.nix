@@ -6,7 +6,16 @@
     ../features/browser.nix
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot = {
+    kernelPackages = pkgs.linuxPackages_latest;
+
+    plymouth = {
+      enable = true;
+      theme = "bgrt";
+    };
+
+    initrd.systemd.enable = true;
+  };
 
   networking.hostName = "honor";
   networking.networkmanager.enable = true;
