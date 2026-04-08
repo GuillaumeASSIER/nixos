@@ -12,6 +12,11 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs = {
@@ -21,6 +26,8 @@
     disko,
     alejandra,
     lanzaboote,
+    sops-nix,
+    hermes-agent,
   }: let
     username = "heap";
     hostname = "honor";
@@ -28,7 +35,6 @@
   in {
     nixosConfigurations = {
       ${hostname} = nixpkgs.lib.nixosSystem {
-        inherit system;
         specialArgs = {
           inherit username hostname;
         };
@@ -36,7 +42,12 @@
           ./modules/honor/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
-          {nixpkgs.config.allowUnfree = true;}
+          sops-nix.nixosModules.default
+          # hermes-agent.nixosModules.default
+          {
+            nixpkgs.hostPlatform = system;
+            nixpkgs.config.allowUnfree = true;
+          }
 
           home-manager.nixosModules.home-manager
           {

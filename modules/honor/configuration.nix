@@ -4,6 +4,7 @@
     ../features/desktop.nix
     ../features/ide.nix
     ../features/browser.nix
+    # ../features/hermes.nix
   ];
 
   boot = {
@@ -78,6 +79,10 @@
     ncdu
     gdu
     tree
+    nvtopPackages.intel
+    inteltool
+    igsc
+    haskellPackages.intel-powermon
 
     # Search and text processing
     ripgrep
@@ -91,7 +96,7 @@
     # Programming languages
     python314
     python314Packages.pip
-    nodePackages.npm
+    nodejs
     go
 
     # Container tools
@@ -116,9 +121,12 @@
 
     # Multimedia
     vlc
+    element-desktop
+    orca-slicer
   ];
 
   programs = {
+    steam.enable = true;
     git = {
       enable = true;
       config = {
