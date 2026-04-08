@@ -43,3 +43,15 @@ nix flake update
 # Format nix files
 nix fmt
 ```
+
+## Setup 
+
+```bash
+# Retrieve repository
+nix-shell -p git vscodium
+git clone git@github.com:GuillaumeASSIER/nixos.git
+cd nixos/
+
+# Format the disk
+sudo nix run 'github:nix-community/disko/latest#disko-install' -- --flake .#honor --disk /dev/nvme01 modules/honor/disko.nix
+```
