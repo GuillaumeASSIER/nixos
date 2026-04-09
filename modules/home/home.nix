@@ -28,21 +28,27 @@
     vscode = {
       enable = true;
       package = pkgs.vscodium;
-      profiles.default.extensions = with pkgs.vscode-extensions; [
-        shd101wyy.markdown-preview-enhanced
-        jnoortheen.nix-ide
-        redhat.vscode-yaml
-        ms-azuretools.vscode-docker
-        ms-kubernetes-tools.vscode-kubernetes-tools
-        ms-vscode-remote.remote-containers
-        kilocode.kilo-code
-        ms-python.python
-        ms-python.vscode-pylance
-        njpwerner.autodocstring
-        yoavbls.pretty-ts-errors
-        github.vscode-pull-request-github
-        gitlab.gitlab-workflow
-      ];
+      profiles.default = {
+        extensions = with pkgs.vscode-extensions; [
+          shd101wyy.markdown-preview-enhanced
+          jnoortheen.nix-ide
+          redhat.vscode-yaml
+          ms-azuretools.vscode-docker
+          ms-kubernetes-tools.vscode-kubernetes-tools
+          ms-vscode-remote.remote-containers
+          kilocode.kilo-code
+          ms-python.python
+          ms-python.vscode-pylance
+          njpwerner.autodocstring
+          yoavbls.pretty-ts-errors
+          github.vscode-pull-request-github
+          gitlab.gitlab-workflow
+          github.github-vscode-theme
+        ];
+        userSettings = {
+          "workbench.colorTheme" = "GitHub Light";
+        };
+      };
     };
     git = {
       enable = true;
