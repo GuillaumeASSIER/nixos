@@ -48,6 +48,13 @@
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
+          "git.autoFetch" = true;
+          "git.confirmSync" = false;
+          "git.enableSmartCommit" = true;
+          "git.postCommitCommand" = "sync";
+          "gitlab.duoCodeSuggestions.enabled" = false;
+          "gitlab.duoChat.enabled" = false;
+          "gitlab.duo.enabled" = false;
         };
       };
     };
