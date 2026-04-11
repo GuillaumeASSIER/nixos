@@ -15,11 +15,11 @@
       availableKernelModules = ["xhci_pci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc"];
       kernelModules = [];
     };
-    kernelModules = ["kvm-intel"];
+    kernelModules = ["kvm-amd"];
     kernelParams = ["quiet" "splash"];
   };
 
-  services.xserver.videoDrivers = ["modesetting"];
+  services.xserver.videoDrivers = ["amdgpu"];
 
   hardware = {
     firmware = [pkgs.linux-firmware];
@@ -27,17 +27,17 @@
       enable = true;
       enable32Bit = true;
       extraPackages = with pkgs; [
-        intel-media-driver
-        vpl-gpu-rt
-        intel-compute-runtime
+        amdvlk
+        rocmPackages.clr
+        rocmPackages.clr.icd
       ];
     };
   };
 
   environment.sessionVariables = {
-    LIBVA_DRIVER_NAME = "iHD";
+    ROCM_PATH = "/run/opengl-driver";
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+  hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }

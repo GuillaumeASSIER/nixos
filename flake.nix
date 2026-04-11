@@ -48,12 +48,12 @@
             }
             home-manager.nixosModules.home-manager
             {
-              home-manager = {
+home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 backupFileExtension = "backup";
                 extraSpecialArgs = {inherit username;};
-                users.${username} = import ./modules/home/home.nix;
+                users.${username} = import ./inventaire/users/${username}/home.nix;
               };
             }
           ]
@@ -65,7 +65,7 @@
         hostname = "honor";
         username = "heap";
         modules = [
-          ./modules/honor/default.nix
+          ./inventaire/hosts/honor/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
           sops-nix.nixosModules.default
@@ -73,9 +73,9 @@
       };
       pro = mkHost {
         hostname = "pro";
-        username = "pro";
+        username = "guillaume";
         modules = [
-          ./modules/pro/default.nix
+          ./inventaire/hosts/pro/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
           sops-nix.nixosModules.default

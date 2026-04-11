@@ -1,9 +1,9 @@
 {pkgs, ...}: {
   imports = [
-    ../features/core.nix
-    ../features/plasma.nix
-    ../features/ide.nix
-    ../features/browser.nix
+    ../../../modules/features/core.nix
+    ../../../modules/features/plasma.nix
+    ../../../modules/features/ide.nix
+    ../../../modules/features/browser.nix
   ];
 
   boot = {
@@ -109,8 +109,8 @@
     git = {
       enable = true;
       config = {
-        user.name = "pro";
-        user.email = "pro@example.com";
+        user.name = "guillaume";
+        user.email = "guillaume@example.com";
         pull.rebase = false;
         init.defaultBranch = "main";
       };
@@ -125,12 +125,12 @@
 
   services.fwupd.enable = true;
 
-  users.users.pro = {
+  users.users.guillaume = {
     isNormalUser = true;
-    group = "pro";
+    group = "guillaume";
     extraGroups = ["wheel" "docker" "libvirtd"];
   };
-  users.groups.pro = {};
+  users.groups.guillaume = {};
 
   system.stateVersion = "25.11";
 

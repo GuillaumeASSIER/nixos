@@ -1,10 +1,12 @@
 {pkgs, ...}: {
   imports = [
-    ../features/core.nix
-    ../features/desktop.nix
-    ../features/ide.nix
-    ../features/browser.nix
-    # ../features/hermes.nix
+    ../../../modules/features/core.nix
+    ../../../modules/features/desktop.nix
+    ../../../modules/features/ide.nix
+    ../../../modules/features/browser.nix
+    ../../../modules/features/security.nix
+    ../../../modules/features/journald.nix
+    # ../../../modules/features/hermes.nix
   ];
 
   boot = {
