@@ -1,13 +1,5 @@
 {...}: {
   security.rtkit.enable = true;
-  security.apparmor = {
-    enable = true;
-    killUnconfinedConfinables = true;
-  };
-
-  services.fail2ban = {
-    enable = true;
-  };
 
   services.openssh = {
     enable = true;
@@ -28,15 +20,6 @@
   };
 
   services.netbird.enable = true;
-
-  networking.firewall = {
-    enable = true;
-    allowPing = true;
-    logReversePathDrops = true;
-    checkReversePath = "loose";
-    allowedTCPPorts = [22];
-    allowedUDPPorts = [22];
-  };
 
   programs.zsh.enable = true;
 }
