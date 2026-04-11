@@ -9,6 +9,7 @@
     thunderbird
     darktable
     orca-slicer
+    emote
   ];
 
   dconf = {
