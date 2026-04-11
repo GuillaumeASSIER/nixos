@@ -29,38 +29,56 @@
     sops-nix,
     hermes-agent,
   }: let
-    username = "heap";
-    hostname = "honor";
     system = "x86_64-linux";
-  in {
-    nixosConfigurations = {
-      ${hostname} = nixpkgs.lib.nixosSystem {
+
+    mkHost = {
+      hostname,
+      username,
+      modules,
+    }:
+      nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit username hostname;
         };
+        modules =
+          [
+            {
+              nixpkgs.hostPlatform = system;
+              nixpkgs.config.allowUnfree = true;
+            }
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+                extraSpecialArgs = {inherit username;};
+                users.${username} = import ./modules/home/home.nix;
+              };
+            }
+          ]
+          ++ modules;
+      };
+  in {
+    nixosConfigurations = {
+      honor = mkHost {
+        hostname = "honor";
+        username = "heap";
         modules = [
           ./modules/honor/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
           sops-nix.nixosModules.default
-          # hermes-agent.nixosModules.default
-          {
-            nixpkgs.hostPlatform = system;
-            nixpkgs.config.allowUnfree = true;
-          }
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "backup";
-              extraSpecialArgs = {
-                inherit username;
-              };
-              users.${username} = import ./modules/home/home.nix;
-            };
-          }
+        ];
+      };
+      pro = mkHost {
+        hostname = "pro";
+        username = "pro";
+        modules = [
+          ./modules/pro/default.nix
+          disko.nixosModules.default
+          lanzaboote.nixosModules.lanzaboote
+          sops-nix.nixosModules.default
         ];
       };
     };
