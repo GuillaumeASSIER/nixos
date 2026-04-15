@@ -32,7 +32,6 @@
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
           "git.autoFetch" = true;
-          "git.confirmSync" = false;
           "git.enableSmartCommit" = true;
           "git.postCommitCommand" = "sync";
           "gitlab.duoCodeSuggestions.enabled" = false;
