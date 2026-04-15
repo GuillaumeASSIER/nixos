@@ -104,6 +104,7 @@
     python314
     python314Packages.pip
     nodejs
+    bun
     go
 
     # Container tools
