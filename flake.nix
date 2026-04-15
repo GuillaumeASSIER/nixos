@@ -12,11 +12,7 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hermes-agent.url = "github:NousResearch/hermes-agent";
+
   };
 
   outputs = {
@@ -26,8 +22,6 @@
     disko,
     alejandra,
     lanzaboote,
-    sops-nix,
-    hermes-agent,
   }: let
     system = "x86_64-linux";
 
@@ -68,7 +62,7 @@ home-manager = {
           ./inventaire/hosts/honor/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
-          sops-nix.nixosModules.default
+
         ];
       };
       pro = mkHost {
@@ -78,7 +72,7 @@ home-manager = {
           ./inventaire/hosts/pro/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
-          sops-nix.nixosModules.default
+
         ];
       };
     };
@@ -87,6 +81,7 @@ home-manager = {
 
     packages.${system} = {
       inherit (nixpkgs.legacyPackages.${system}) alejandra statix deadnix;
+      default = self.packages.${system}.alejandra;
     };
 
     devShells.${system} = {

@@ -6,7 +6,8 @@
     ../../../modules/features/browser.nix
     ../../../modules/features/security.nix
     ../../../modules/features/journald.nix
-    # ../../../modules/features/hermes.nix
+
+    ../../../modules/features/k3s.nix
   ];
 
   boot = {
@@ -47,6 +48,8 @@
   virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
 
+  environment.pathsToLink = [ "/share/zsh" ];
+
   environment.systemPackages = with pkgs; [
     neovim
     uv
@@ -57,6 +60,8 @@
     fzf
     vhs
     sops
+    mullvad-vpn
+    proton-vpn
     fastfetch
     act
     gh
@@ -151,6 +156,7 @@
     isNormalUser = true;
     group = "heap";
     extraGroups = ["wheel" "docker" "libvirtd"];
+    shell = pkgs.zsh;
   };
   users.groups.heap = {};
 

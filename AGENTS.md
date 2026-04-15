@@ -46,7 +46,7 @@ Features:
         ├── browser.nix    # Firefox & Chromium policies
         ├── core.nix       # Security (apparmor, fail2ban, firewall, ssh)
         ├── desktop.nix    # GNOME, GDM, PipeWire, Flatpak
-        ├── hermes.nix     # Hermes service
+
         ├── ide.nix        # Git, lazygit, opencode
         ├── journald.nix   # Journald configuration
         ├── office.nix     # Office packages

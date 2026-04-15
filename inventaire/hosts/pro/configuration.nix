@@ -43,6 +43,8 @@
   virtualisation.libvirtd.enable = true;
   virtualisation.podman = {enable = true;};
 
+  environment.pathsToLink = [ "/share/zsh" ];
+
   environment.systemPackages = with pkgs; [
     neovim
     wget
