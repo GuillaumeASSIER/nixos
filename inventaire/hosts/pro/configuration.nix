@@ -138,11 +138,18 @@
 
   system.stateVersion = "25.11";
 
-  nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
-    download-buffer-size = 64 * 1024 * 1024;
-    max-jobs = "auto";
-    cores = 0;
-    sandbox = true;
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      download-buffer-size = 64 * 1024 * 1024;
+      max-jobs = "auto";
+      cores = 0;
+      sandbox = true;
+    };
   };
 }
