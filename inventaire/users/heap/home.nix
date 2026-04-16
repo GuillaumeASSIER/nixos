@@ -30,21 +30,21 @@
       package = pkgs.vscodium;
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
-          shd101wyy.markdown-preview-enhanced
-          jnoortheen.nix-ide
-          redhat.vscode-yaml
-          ms-azuretools.vscode-docker
-          ms-kubernetes-tools.vscode-kubernetes-tools
-          ms-vscode-remote.remote-containers
-          kilocode.kilo-code
-          ms-python.python
-          ms-python.vscode-pylance
-          njpwerner.autodocstring
-          yoavbls.pretty-ts-errors
+          github.github-vscode-theme
           github.vscode-pull-request-github
           gitlab.gitlab-workflow
-          github.github-vscode-theme
+          jnoortheen.nix-ide
+          kilocode.kilo-code
+          ms-azuretools.vscode-docker
+          ms-kubernetes-tools.vscode-kubernetes-tools
+          ms-python.python
+          ms-python.vscode-pylance
+          ms-vscode-remote.remote-containers
+          njpwerner.autodocstring
+          redhat.vscode-yaml
+          shd101wyy.markdown-preview-enhanced
           vue.volar
+          yoavbls.pretty-ts-errors
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";

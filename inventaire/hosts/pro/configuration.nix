@@ -105,6 +105,7 @@
     libreoffice
     thunderbird
     pdfarranger
+    element-desktop
   ];
 
   programs = {
@@ -126,6 +127,7 @@
   };
 
   services.fwupd.enable = true;
+  services.fprintd.enable = true;
 
   users.users.guillaume = {
     isNormalUser = true;
