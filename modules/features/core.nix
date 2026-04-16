@@ -1,13 +1,5 @@
 {...}: {
   security.rtkit.enable = true;
-  security.apparmor = {
-    enable = true;
-    killUnconfinedConfinables = true;
-  };
-
-  services.fail2ban = {
-    enable = true;
-  };
 
   services.openssh = {
     enable = true;
@@ -27,15 +19,7 @@
     };
   };
 
-  networking.firewall = {
-    enable = true;
-    allowPing = true;
-    logReversePathDrops = true;
-    checkReversePath = "loose";
-    # Par défaut, bloquer tout le trafic entrant
-    allowedTCPPorts = [22];
-    allowedUDPPorts = [22];
-  };
+  services.netbird.enable = true;
 
   programs.zsh.enable = true;
 }
