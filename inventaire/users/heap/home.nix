@@ -44,6 +44,8 @@
           github.vscode-pull-request-github
           gitlab.gitlab-workflow
           github.github-vscode-theme
+          vue.volar
+          vue.vscode-typescript-vue-plugin
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
