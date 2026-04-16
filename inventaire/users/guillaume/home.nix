@@ -16,6 +16,7 @@
         extensions = with pkgs.vscode-extensions; [
           shd101wyy.markdown-preview-enhanced
           jnoortheen.nix-ide
+          arrterian.nix-env-selector
           redhat.vscode-yaml
           ms-azuretools.vscode-docker
           ms-kubernetes-tools.vscode-kubernetes-tools
