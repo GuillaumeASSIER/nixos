@@ -3,13 +3,12 @@
 
   home.packages = with pkgs; [
     gh
-    tea
-    glab
     discord
     thunderbird
     darktable
     orca-slicer
     emote
+    rtk
   ];
 
   dconf = {
@@ -31,20 +30,21 @@
       package = pkgs.vscodium;
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
-          shd101wyy.markdown-preview-enhanced
-          jnoortheen.nix-ide
-          redhat.vscode-yaml
-          ms-azuretools.vscode-docker
-          ms-kubernetes-tools.vscode-kubernetes-tools
-          ms-vscode-remote.remote-containers
-          kilocode.kilo-code
-          ms-python.python
-          ms-python.vscode-pylance
-          njpwerner.autodocstring
-          yoavbls.pretty-ts-errors
+          github.github-vscode-theme
           github.vscode-pull-request-github
           gitlab.gitlab-workflow
-          github.github-vscode-theme
+          jnoortheen.nix-ide
+          kilocode.kilo-code
+          ms-azuretools.vscode-docker
+          ms-kubernetes-tools.vscode-kubernetes-tools
+          ms-python.python
+          ms-python.vscode-pylance
+          ms-vscode-remote.remote-containers
+          njpwerner.autodocstring
+          redhat.vscode-yaml
+          shd101wyy.markdown-preview-enhanced
+          vue.volar
+          yoavbls.pretty-ts-errors
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
@@ -52,9 +52,6 @@
           "git.confirmSync" = false;
           "git.enableSmartCommit" = true;
           "git.postCommitCommand" = "sync";
-          "gitlab.duoCodeSuggestions.enabled" = false;
-          "gitlab.duoChat.enabled" = false;
-          "gitlab.duo.enabled" = false;
         };
       };
     };
@@ -62,18 +59,29 @@
       enable = true;
       settings = {
         user.name = "GuillaumeAssier";
-        user.email = "sykursen@protonmail.com";
-        pull.rebase = true;
+        user.email = "heap@example.com";
+        pull.rebase = false;
         init.defaultBranch = "main";
       };
     };
+    zoxide = {
+      enable = true;
+      enableZshIntegration = true;
+    };
     zsh = {
       enable = true;
+      enableCompletion = true;
+      autosuggestion = {
+        enable = true;
+        strategy = [ "history" "completion" "match_prev_cmd" ];
+      };
+      enableVteIntegration = true;
       oh-my-zsh = {
         enable = true;
         theme = "robbyrussell";
         plugins = ["git" "docker" "kubectl" "terraform"];
       };
+      history.size = 100000;
     };
     ssh = {
       enable = true;

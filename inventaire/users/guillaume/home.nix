@@ -4,26 +4,9 @@
   home.packages = with pkgs; [
     gh
     tea
-    glab
-    discord
     thunderbird
-    darktable
-    orca-slicer
     emote
   ];
-
-  dconf = {
-    enable = true;
-    settings = {
-      "org/gnome/shell" = {
-        disable-user-extensions = false;
-        enabled-extensions = with pkgs.gnomeExtensions; [
-          appindicator.extensionUuid
-          blur-my-shell.extensionUuid
-        ];
-      };
-    };
-  };
 
   programs = {
     vscode = {
@@ -33,6 +16,7 @@
         extensions = with pkgs.vscode-extensions; [
           shd101wyy.markdown-preview-enhanced
           jnoortheen.nix-ide
+          arrterian.nix-env-selector
           redhat.vscode-yaml
           ms-azuretools.vscode-docker
           ms-kubernetes-tools.vscode-kubernetes-tools
@@ -49,7 +33,6 @@
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
           "git.autoFetch" = true;
-          "git.confirmSync" = false;
           "git.enableSmartCommit" = true;
           "git.postCommitCommand" = "sync";
           "gitlab.duoCodeSuggestions.enabled" = false;
@@ -62,7 +45,7 @@
       enable = true;
       settings = {
         user.name = "GuillaumeAssier";
-        user.email = "sykursen@protonmail.com";
+        user.email = "guillaume.assier@vates.tech";
         pull.rebase = true;
         init.defaultBranch = "main";
       };

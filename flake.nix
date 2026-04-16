@@ -8,6 +8,11 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     alejandra.url = "github:kamadorueda/alejandra";
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote/v1.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = {
@@ -16,34 +21,58 @@
     home-manager,
     disko,
     alejandra,
+    lanzaboote,
   }: let
-    username = "heap";
-    hostname = "honor";
     system = "x86_64-linux";
-  in {
-    nixosConfigurations = {
-      ${hostname} = nixpkgs.lib.nixosSystem {
-        inherit system;
+
+    mkHost = {
+      hostname,
+      username,
+      modules,
+    }:
+      nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit username hostname;
         };
-        modules = [
-          ./modules/honor/default.nix
-          disko.nixosModules.default
-          {nixpkgs.config.allowUnfree = true;}
-
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "backup";
-              extraSpecialArgs = {
-                inherit username;
+        modules =
+          [
+            {
+              nixpkgs.hostPlatform = system;
+              nixpkgs.config.allowUnfree = true;
+            }
+            home-manager.nixosModules.home-manager
+            {
+home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "backup";
+                extraSpecialArgs = {inherit username;};
+                users.${username} = import ./inventaire/users/${username}/home.nix;
               };
-              users.${username} = import ./modules/home/home.nix;
-            };
-          }
+            }
+          ]
+          ++ modules;
+      };
+  in {
+    nixosConfigurations = {
+      honor = mkHost {
+        hostname = "honor";
+        username = "heap";
+        modules = [
+          ./inventaire/hosts/honor/default.nix
+          disko.nixosModules.default
+          lanzaboote.nixosModules.lanzaboote
+
+        ];
+      };
+      pro = mkHost {
+        hostname = "pro";
+        username = "guillaume";
+        modules = [
+          ./inventaire/hosts/pro/default.nix
+          disko.nixosModules.default
+          lanzaboote.nixosModules.lanzaboote
+
         ];
       };
     };
@@ -52,6 +81,7 @@
 
     packages.${system} = {
       inherit (nixpkgs.legacyPackages.${system}) alejandra statix deadnix;
+      default = self.packages.${system}.alejandra;
     };
 
     devShells.${system} = {

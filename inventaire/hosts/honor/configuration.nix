@@ -1,17 +1,24 @@
 {pkgs, ...}: {
   imports = [
-    ../features/core.nix
-    ../features/desktop.nix
-    ../features/ide.nix
-    ../features/browser.nix
+    ../../../modules/features/core.nix
+    ../../../modules/features/desktop.nix
+    ../../../modules/features/ide.nix
+    ../../../modules/features/browser.nix
+    ../../../modules/features/security.nix
+    ../../../modules/features/journald.nix
+
+    ../../../modules/features/k3s.nix
   ];
 
   boot = {
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
     kernelPackages = pkgs.linuxPackages_latest;
+
+    plymouth = {
+      enable = true;
+      theme = "bgrt";
+    };
+
+    initrd.systemd.enable = true;
   };
 
   networking.hostName = "honor";
@@ -51,6 +58,8 @@
     fzf
     vhs
     sops
+    mullvad-vpn
+    proton-vpn
     fastfetch
     act
     gh
@@ -75,6 +84,10 @@
     ncdu
     gdu
     tree
+    nvtopPackages.intel
+    inteltool
+    igsc
+    haskellPackages.intel-powermon
 
     # Search and text processing
     ripgrep
@@ -88,7 +101,8 @@
     # Programming languages
     python314
     python314Packages.pip
-    nodePackages.npm
+    nodejs
+    bun
     go
 
     # Container tools
@@ -113,14 +127,17 @@
 
     # Multimedia
     vlc
+    element-desktop
+    orca-slicer
   ];
 
   programs = {
+    steam.enable = true;
     git = {
       enable = true;
       config = {
-        user.name = "heap";
-        user.email = "heap@example.com";
+        user.name = "GuillaumeAssier";
+        user.email = "sykursen@protonmail.com";
         pull.rebase = false;
         init.defaultBranch = "main";
       };
@@ -138,16 +155,24 @@
     isNormalUser = true;
     group = "heap";
     extraGroups = ["wheel" "docker" "libvirtd"];
+    shell = pkgs.zsh;
   };
   users.groups.heap = {};
 
   system.stateVersion = "25.11";
 
-  nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
-    download-buffer-size = 64 * 1024 * 1024;
-    max-jobs = "auto";
-    cores = 0;
-    sandbox = true;
+  nix = {
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+    settings = {
+      experimental-features = ["nix-command" "flakes"];
+      download-buffer-size = 64 * 1024 * 1024;
+      max-jobs = "auto";
+      cores = 0;
+      sandbox = true;
+    };
   };
 }
