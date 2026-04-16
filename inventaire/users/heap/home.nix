@@ -45,7 +45,6 @@
           gitlab.gitlab-workflow
           github.github-vscode-theme
           vue.volar
-          vue.vscode-typescript-vue-plugin
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
@@ -59,7 +58,7 @@
     git = {
       enable = true;
       settings = {
-        user.name = "heap";
+        user.name = "GuillaumeAssier";
         user.email = "heap@example.com";
         pull.rebase = false;
         init.defaultBranch = "main";
