@@ -48,8 +48,6 @@
   virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
 
-  environment.pathsToLink = [ "/share/zsh" ];
-
   environment.systemPackages = with pkgs; [
     neovim
     uv
@@ -138,8 +136,8 @@
     git = {
       enable = true;
       config = {
-        user.name = "heap";
-        user.email = "heap@example.com";
+        user.name = "GuillaumeAssier";
+        user.email = "sykursen@protonmail.com";
         pull.rebase = false;
         init.defaultBranch = "main";
       };
