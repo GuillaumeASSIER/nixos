@@ -9,7 +9,12 @@
       enable = true;
       pkiBundle = "/var/lib/sbctl";
       autoGenerateKeys.enable = true;
-      autoEnrollKeys.enable = true;
+      autoEnrollKeys = {
+        enable = true;
+        includeMicrosoftKeys = true;
+        allowBrickingMyMachine = false;
+        autoReboot = true;
+      };
     };
   };
 

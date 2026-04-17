@@ -6,8 +6,8 @@
     ../../../modules/features/browser.nix
     ../../../modules/features/security.nix
     ../../../modules/features/journald.nix
-
     ../../../modules/features/k3s.nix
+    ../../../modules/features/secureboot.nix
   ];
 
   boot = {
@@ -88,6 +88,8 @@
     inteltool
     igsc
     haskellPackages.intel-powermon
+    usbutils
+    pciutils
 
     # Search and text processing
     ripgrep
@@ -158,6 +160,13 @@
     shell = pkgs.zsh;
   };
   users.groups.heap = {};
+
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 16384;
+    }
+  ];
 
   system.stateVersion = "25.11";
 
