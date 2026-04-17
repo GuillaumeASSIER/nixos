@@ -4,6 +4,7 @@
     ../../../modules/features/plasma.nix
     ../../../modules/features/ide.nix
     ../../../modules/features/browser.nix
+    ../../../modules/features/secureboot.nix
   ];
 
   boot = {
@@ -59,6 +60,8 @@
     gdu
     htop
     btop
+    usbutils
+    pciutils
 
     # DevOps
     kubectl
@@ -127,7 +130,6 @@
   };
 
   services.fwupd.enable = true;
-  services.fprintd.enable = true;
 
   users.users.guillaume = {
     isNormalUser = true;
@@ -135,6 +137,13 @@
     extraGroups = ["wheel" "docker" "libvirtd"];
   };
   users.groups.guillaume = {};
+
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 8192;
+    }
+  ];
 
   system.stateVersion = "25.11";
 
