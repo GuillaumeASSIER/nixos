@@ -5,6 +5,8 @@
     ../../../modules/features/ide.nix
     ../../../modules/features/browser.nix
     ../../../modules/features/secureboot.nix
+    ../../../modules/features/k3s.nix
+    ../../../modules/features/debug.nix
   ];
 
   boot = {
@@ -42,7 +44,6 @@
 
   virtualisation.docker.enable = true;
   virtualisation.libvirtd.enable = true;
-  virtualisation.podman = {enable = true;};
 
   environment.pathsToLink = [ "/share/zsh" ];
 
@@ -55,13 +56,6 @@
     fzf
     ripgrep
     jq
-    tree
-    ncdu
-    gdu
-    htop
-    btop
-    usbutils
-    pciutils
 
     # DevOps
     kubectl
@@ -98,17 +92,14 @@
     sops
     gnupg
 
-    # Network
-    nmap
-    mtr
-    iperf3
-    wireshark
-
     # Office
     libreoffice
     thunderbird
     pdfarranger
     element-desktop
+    logseq
+    rtk
+    vlc
   ];
 
   programs = {
@@ -125,7 +116,6 @@
       enable = true;
       nix-direnv.enable = true;
     };
-    mtr.enable = true;
     zsh.enable = true;
   };
 
