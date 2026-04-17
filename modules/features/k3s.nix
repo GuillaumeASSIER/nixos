@@ -5,7 +5,7 @@
     extraFlags = ["--write-kubeconfig-mode 644" "--secrets-encryption"];
   };
 
-  environment.sessionVariables.KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+  environment.variables.KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
 
   environment.systemPackages = with pkgs; [
     k3s
