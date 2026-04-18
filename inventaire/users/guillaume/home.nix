@@ -9,6 +9,10 @@
   ];
 
   programs = {
+    tmux = {
+      enable = true;
+      mouse = true;
+    };
     vscode = {
       enable = true;
       package = pkgs.vscodium;
