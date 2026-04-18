@@ -51,11 +51,8 @@ Based on [Dammyr nixos-laptops-config](https://github.com/DamyrFr/nixos-laptops-
 ## Building
 
 ```bash
-# Rebuild system (honor)
-sudo nixos-rebuild switch --flake .#honor
-
-# Rebuild system (pro)
-sudo nixos-rebuild switch --flake .#pro
+# Rebuild system
+sudo nixos-rebuild switch --flake .#$TARGET
 
 # Update dependencies
 nix flake update
@@ -72,9 +69,13 @@ nix-shell -p git vscodium
 git clone git@github.com:GuillaumeASSIER/nixos.git
 cd nixos/
 
-# Format the disk (honor)
-sudo nix run 'github:nix-community/disko/latest#disko-install' -- --flake .#honor --disk /dev/nvme01 inventaire/hosts/honor/disko.nix
-
 # Format the disk (pro)
-sudo nix run 'github:nix-community/disko/latest#disko-install' -- --flake .#pro --disk /dev/nvme01 inventaire/hosts/pro/disko.nix
+sudo nix --experimental-features "nix-command flakes" \
+    run github:nix-community/disko/latest -- --mode destroy,format,mount inventaire/hosts/$TARGET/disko.nix
+
+# Mount the filesystem
+mount | grep /mnt
+
+# Build the correct system
+sudo nixos-install --flake .#$TARGET
 ```
