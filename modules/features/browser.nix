@@ -103,6 +103,38 @@
             Value = false;
             Status = "locked";
           };
+          "browser.toolbars.bookmarks.visibility" = {
+            Value = "always";
+            Status = "locked";
+          };
+          "browser.startup.page" = {
+            Value = 3;
+            Status = "locked";
+          };
+          "privacy.clearOnShutdown.history" = {
+            Value = false;
+            Status = "locked";
+          };
+          "privacy.clearOnShutdown.cookies" = {
+            Value = false;
+            Status = "locked";
+          };
+          "privacy.clearOnShutdown.cache" = {
+            Value = false;
+            Status = "locked";
+          };
+          "privacy.clearOnShutdown.downloads" = {
+            Value = false;
+            Status = "locked";
+          };
+          "privacy.clearOnShutdown.sessions" = {
+            Value = false;
+            Status = "locked";
+          };
+          "privacy.sanitize.sanitizeOnShutdown" = {
+            Value = false;
+            Status = "locked";
+          };
         };
       };
     };

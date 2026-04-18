@@ -6,6 +6,8 @@
     tea
     thunderbird
     emote
+    uv
+    appflowy
   ];
 
   programs = {
@@ -47,11 +49,17 @@
     };
     git = {
       enable = true;
+      signing = {
+        key = "~/.ssh/id_ed25519.pub";
+        signByDefault = true;
+        format = "ssh";
+      };
       settings = {
         user.name = "GuillaumeAssier";
         user.email = "guillaume.assier@vates.tech";
         pull.rebase = true;
         init.defaultBranch = "main";
+        gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
       };
     };
     zsh = {
@@ -70,6 +78,26 @@
           identityFile = "~/.ssh/id_ed25519";
           addKeysToAgent = "yes";
           compression = true;
+        };
+        "github.com" = {
+          identityFile = "~/.ssh/id_ed25519";
+          addKeysToAgent = "yes";
+          compression = true;
+          kexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
+          extraOptions = {
+            HostKeyAlgorithms = "ssh-ed25519";
+            PubkeyAcceptedAlgorithms = "ssh-ed25519";
+          };
+        };
+        "git.vates.tech" = {
+          identityFile = "~/.ssh/id_ed25519";
+          addKeysToAgent = "yes";
+          compression = true;
+          kexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
+          extraOptions = {
+            HostKeyAlgorithms = "ssh-ed25519";
+            PubkeyAcceptedAlgorithms = "ssh-ed25519";
+          };
         };
       };
     };

@@ -6,8 +6,10 @@
     ../../../modules/features/browser.nix
     ../../../modules/features/security.nix
     ../../../modules/features/journald.nix
-
     ../../../modules/features/k3s.nix
+    ../../../modules/features/secureboot.nix
+    ../../../modules/features/debug.nix
+    ../../../modules/features/intel.nix
   ];
 
   boot = {
@@ -74,20 +76,7 @@
     hubble
 
     # Network tools
-    nmap
-    ipcalc
-    fping
-    mtr
     openvpn
-
-    # System utilities
-    ncdu
-    gdu
-    tree
-    nvtopPackages.intel
-    inteltool
-    igsc
-    haskellPackages.intel-powermon
 
     # Search and text processing
     ripgrep
@@ -146,7 +135,6 @@
       enable = true;
       nix-direnv.enable = true;
     };
-    mtr.enable = true;
   };
 
   services.fwupd.enable = true;
@@ -158,6 +146,13 @@
     shell = pkgs.zsh;
   };
   users.groups.heap = {};
+
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 16384;
+    }
+  ];
 
   system.stateVersion = "25.11";
 
