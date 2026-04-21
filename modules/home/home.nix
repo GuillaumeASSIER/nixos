@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  imports = [./codium.nix];
+
   home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
@@ -26,38 +28,7 @@
   };
 
   programs = {
-    vscode = {
-      enable = true;
-      package = pkgs.vscodium;
-      profiles.default = {
-        extensions = with pkgs.vscode-extensions; [
-          shd101wyy.markdown-preview-enhanced
-          jnoortheen.nix-ide
-          redhat.vscode-yaml
-          ms-azuretools.vscode-docker
-          ms-kubernetes-tools.vscode-kubernetes-tools
-          ms-vscode-remote.remote-containers
-          kilocode.kilo-code
-          ms-python.python
-          ms-python.vscode-pylance
-          njpwerner.autodocstring
-          yoavbls.pretty-ts-errors
-          github.vscode-pull-request-github
-          gitlab.gitlab-workflow
-          github.github-vscode-theme
-        ];
-        userSettings = {
-          "workbench.colorTheme" = "GitHub Light";
-          "git.autoFetch" = true;
-          "git.confirmSync" = false;
-          "git.enableSmartCommit" = true;
-          "git.postCommitCommand" = "sync";
-          "gitlab.duoCodeSuggestions.enabled" = false;
-          "gitlab.duoChat.enabled" = false;
-          "gitlab.duo.enabled" = false;
-        };
-      };
-    };
+    
     git = {
       enable = true;
       settings = {
@@ -98,7 +69,7 @@
         "opencode"
       ];
       userSettings = {
-        features.copilot = false;
+        features.copilot = true;
         telemetry.metrics = false;
         vim_mode = false;
         ui_font_size = 16;

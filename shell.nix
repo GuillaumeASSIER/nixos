@@ -8,23 +8,9 @@ pkgs.mkShell {
 
     # Version control
     git
-    git-lfs
     lazygit
 
-    # Network tools
-    openssh
-    curl
-    wget
-
     # Utils
-    vim
     tmux
-
-    # Cloud tools
-    kubectl
-    k9s
   ];
-
-  # For passthrough
-  GI_TYPELIB_PATH = "${pkgs.gtk3}/lib/gio/modules";
 }

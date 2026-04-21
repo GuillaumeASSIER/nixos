@@ -1,4 +1,6 @@
 {pkgs, ...}: {
+  imports = [../../../modules/home/codium.nix];
+
   home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
@@ -30,41 +32,12 @@
       enable = true;
       mouse = true;
     };
-    vscode = {
-      enable = true;
-      package = pkgs.vscodium;
-      profiles.default = {
-        extensions = with pkgs.vscode-extensions; [
-          github.github-vscode-theme
-          github.vscode-pull-request-github
-          gitlab.gitlab-workflow
-          jnoortheen.nix-ide
-          kilocode.kilo-code
-          ms-azuretools.vscode-docker
-          ms-kubernetes-tools.vscode-kubernetes-tools
-          ms-python.python
-          ms-python.vscode-pylance
-          ms-vscode-remote.remote-containers
-          njpwerner.autodocstring
-          redhat.vscode-yaml
-          shd101wyy.markdown-preview-enhanced
-          vue.volar
-          yoavbls.pretty-ts-errors
-        ];
-        userSettings = {
-          "workbench.colorTheme" = "GitHub Light";
-          "git.autoFetch" = true;
-          "git.confirmSync" = false;
-          "git.enableSmartCommit" = true;
-          "git.postCommitCommand" = "sync";
-        };
-      };
-    };
+    
     git = {
       enable = true;
       settings = {
         user.name = "GuillaumeAssier";
-        user.email = "heap@example.com";
+        user.email = builtins.getEnv "HEAP_EMAIL";
         pull.rebase = false;
         init.defaultBranch = "main";
       };

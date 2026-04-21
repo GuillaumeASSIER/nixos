@@ -1,5 +1,31 @@
 {pkgs, ...}: {
+  imports = [../../../modules/home/codium.nix];
+
   home.stateVersion = "25.11";
+
+  xdg.configFile."opencode/opencode.json" = {
+    source = let
+      cfg = {
+        "$schema" = "https://opencode.ai/config.json";
+        provider = {
+          openwebui = {
+            npm = "@ai-sdk/openai-compatible";
+            name = "Internal LLM  ";
+            options = {
+              baseURL = builtins.getEnv "OPENWEBUI_API_URL";
+              apiKey = builtins.getEnv "OPENWEBUI_API_KEY";
+            };
+            models = {
+              qwen3-6 = {
+                name = "qwen3.6-35b-a3b";
+              };
+            };
+          };
+        };
+        model = "openwebui/qwen3-6";
+      };
+    in pkgs.writeText "opencode.json" (builtins.toJSON cfg);
+  };
 
   home.packages = with pkgs; [
     gh
@@ -15,38 +41,7 @@
       enable = true;
       mouse = true;
     };
-    vscode = {
-      enable = true;
-      package = pkgs.vscodium;
-      profiles.default = {
-        extensions = with pkgs.vscode-extensions; [
-          shd101wyy.markdown-preview-enhanced
-          jnoortheen.nix-ide
-          arrterian.nix-env-selector
-          redhat.vscode-yaml
-          ms-azuretools.vscode-docker
-          ms-kubernetes-tools.vscode-kubernetes-tools
-          ms-vscode-remote.remote-containers
-          kilocode.kilo-code
-          ms-python.python
-          ms-python.vscode-pylance
-          njpwerner.autodocstring
-          yoavbls.pretty-ts-errors
-          github.vscode-pull-request-github
-          gitlab.gitlab-workflow
-          github.github-vscode-theme
-        ];
-        userSettings = {
-          "workbench.colorTheme" = "GitHub Light";
-          "git.autoFetch" = true;
-          "git.enableSmartCommit" = true;
-          "git.postCommitCommand" = "sync";
-          "gitlab.duoCodeSuggestions.enabled" = false;
-          "gitlab.duoChat.enabled" = false;
-          "gitlab.duo.enabled" = false;
-        };
-      };
-    };
+    
     git = {
       enable = true;
       signing = {
@@ -56,7 +51,7 @@
       };
       settings = {
         user.name = "GuillaumeAssier";
-        user.email = "guillaume.assier@vates.tech";
+        user.email = builtins.getEnv "GUILLAUME_EMAIL";
         pull.rebase = true;
         init.defaultBranch = "main";
         gpg.ssh.allowedSignersFile = "~/.ssh/allowed_signers";
@@ -89,7 +84,7 @@
             PubkeyAcceptedAlgorithms = "ssh-ed25519";
           };
         };
-        "git.vates.tech" = {
+        "${builtins.getEnv "VATES_GIT_HOST"}" = {
           identityFile = "~/.ssh/id_ed25519";
           addKeysToAgent = "yes";
           compression = true;

@@ -51,8 +51,8 @@ Based on [Dammyr nixos-laptops-config](https://github.com/DamyrFr/nixos-laptops-
 ## Building
 
 ```bash
-# Rebuild system
-sudo nixos-rebuild switch --flake .#$TARGET
+# Rebuild system (requires --impure for env vars)
+sudo -E nixos-rebuild switch --impure --flake .#$TARGET
 
 # Update dependencies
 nix flake update
