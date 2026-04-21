@@ -126,7 +126,7 @@
       enable = true;
       config = {
         user.name = "GuillaumeAssier";
-        user.email = "sykursen@protonmail.com";
+        user.email = builtins.getEnv "HEAP_EMAIL";
         pull.rebase = false;
         init.defaultBranch = "main";
       };

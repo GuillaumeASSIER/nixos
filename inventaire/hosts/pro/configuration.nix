@@ -56,6 +56,8 @@
     fzf
     ripgrep
     jq
+    dig
+    wireguard-tools
 
     # DevOps
     kubectl
@@ -106,8 +108,8 @@
     git = {
       enable = true;
       config = {
-        user.name = "guillaume";
-        user.email = "guillaume@example.com";
+        user.name = "GuillaumeAssier";
+        user.email = builtins.getEnv "GUILLAUME_EMAIL";
         pull.rebase = false;
         init.defaultBranch = "main";
       };

@@ -58,18 +58,28 @@ Features:
 ## Common Commands
 
 ```bash
-# Rebuild system
-sudo nixos-rebuild switch --flake .#honor
+# Rebuild system (requires --impure for env vars)
+sudo -E nixos-rebuild switch --impure --flake .#honor
 
 # Update dependencies
 nix flake update
 
 # Build system (without switching)
-sudo nixos-rebuild build --flake .#honor
+sudo -E nixos-rebuild  --impure --flake .#honor
 
 # Format nix files
 nix fmt
 ```
+
+## Environment Variables
+
+The configuration reads secrets/values from environment variables (via `direnv`/`.envrc`). Copy `.envrc.example` to `.envrc` and fill in values:
+
+- `OPENWEBUI_API_KEY`: API key for OpenWebUI
+- `OPENWEBUI_API_URL`: OpenWebUI API URL
+- `HEAP_EMAIL`: Email for heap user
+- `GUILLAUME_EMAIL`: Email for guillaume user
+- `VATES_GIT_HOST`: Git server hostname
 
 ## MCP Integration
 
