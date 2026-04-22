@@ -6,6 +6,7 @@
     ../../../modules/features/browser.nix
     ../../../modules/features/security.nix
     ../../../modules/features/journald.nix
+    ../../../modules/features/office.nix
     ../../../modules/features/k3s.nix
     ../../../modules/features/secureboot.nix
     ../../../modules/features/debug.nix
