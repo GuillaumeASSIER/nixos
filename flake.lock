@@ -138,11 +138,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1776777932,
-        "narHash": "sha256-0R3Yow/NzSeVGUke5tL7CCkqmss4Vmi6BbV6idHzq/8=",
+        "lastModified": 1776873408,
+        "narHash": "sha256-oojF0bqTi6xqE1cHNFyexv72KNmbPMViHsqNF9xeddQ=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "5d5640599a0050b994330328b9fd45709c909720",
+        "rev": "936d579f53afa05fc2939c18541e4c9982421e0a",
         "type": "github"
       },
       "original": {
@@ -172,6 +172,22 @@
         "owner": "nix-community",
         "ref": "v1.0.0",
         "repo": "lanzaboote",
+        "type": "github"
+      }
+    },
+    "nixos-hardware": {
+      "locked": {
+        "lastModified": 1776874060,
+        "narHash": "sha256-4zwJ6FoMTiuyAofQnHHIvO9x23YAHJl0mwQ0ukUspes=",
+        "owner": "GuillaumeASSIER",
+        "repo": "nixos-hardware",
+        "rev": "e1d4967743f12ea29d2381fe1c6a683436d63af8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "GuillaumeASSIER",
+        "ref": "thinkpad-t14s-gen6",
+        "repo": "nixos-hardware",
         "type": "github"
       }
     },
@@ -236,6 +252,7 @@
         "disko": "disko",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
+        "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2"
       }
     },
