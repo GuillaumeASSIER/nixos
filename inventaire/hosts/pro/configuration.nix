@@ -65,6 +65,8 @@
     kubectx
     k9s
     kubernetes-helm
+    fluxcd
+    kubeseal
 
     # Cloud/IaC
     opentofu
