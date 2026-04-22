@@ -15,14 +15,13 @@
               baseURL = builtins.getEnv "OPENWEBUI_API_URL";
               apiKey = builtins.getEnv "OPENWEBUI_API_KEY";
             };
-            models = {
-              qwen3-6 = {
-                name = "qwen3.6-35b-a3b";
-              };
-            };
+            # models = {
+            #   qwen3-6 = {
+            #     name = "qwen3.6-35b-a3b";
+            #   };
+            # };
           };
         };
-        model = "openwebui/qwen3-6";
       };
     in pkgs.writeText "opencode.json" (builtins.toJSON cfg);
   };

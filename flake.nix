@@ -12,7 +12,9 @@
       url = "github:nix-community/lanzaboote/v1.0.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    nixos-hardware = {
+      url = "github:GuillaumeASSIER/nixos-hardware/thinkpad-t14s-gen6";
+    };
   };
 
   outputs = {
@@ -22,6 +24,7 @@
     disko,
     alejandra,
     lanzaboote,
+    nixos-hardware,
   }: let
     system = "x86_64-linux";
 
@@ -62,7 +65,6 @@
           ./inventaire/hosts/honor/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
-
         ];
       };
       pro = mkHost {
@@ -72,7 +74,7 @@
           ./inventaire/hosts/pro/default.nix
           disko.nixosModules.default
           lanzaboote.nixosModules.lanzaboote
-
+          nixos-hardware.nixosModules.lenovo-thinkpad-t14s-amd-gen6
         ];
       };
     };
