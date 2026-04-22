@@ -40,6 +40,9 @@ Features:
 │       └── guillaume/     # guillaume user home config
 │           └── home.nix   # User-level packages & programs
 └── modules/
+    ├── fixes/              # Patches for upstream nixpkgs bugs
+    │   ├── pam-apparmor-include-substack.nix  # Disables stock pam.nix, imports patched copy
+    │   └── pam.nix         # Patched pam.nix (filters include/substack from AppArmor check)
     ├── home/              # Home-manager base configuration (deprecated)
     │   └── home.nix       # Moved to inventaire/users/
     └── features/          # Feature modules

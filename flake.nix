@@ -53,6 +53,7 @@
                 users.${username} = import ./inventaire/users/${username}/home.nix;
               };
             }
+            ./modules/fixes/pam-apparmor-include-substack.nix
           ]
           ++ modules;
       };
