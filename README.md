@@ -20,39 +20,51 @@ Based on [Dammyr nixos-laptops-config](https://github.com/DamyrFr/nixos-laptops-
 
 ```
 .
-├── flake.nix              # Main flake entry
-├── inventaire/
-│   ├── hosts/             # Machine configurations
-│   │   ├── honor/         # Honor laptop (Intel)
-│   │   │   ├── default.nix
-│   │   │   ├── configuration.nix
-│   │   │   ├── hardware.nix
-│   │   │   └── disko.nix
-│   │   └── pro/           # Pro laptop (AMD)
-│   │       ├── default.nix
-│   │       ├── configuration.nix
-│   │       ├── hardware.nix
-│   │       └── disko.nix
-│   └── users/             # User configurations
-│       ├── heap/          # heap user (honor)
-│       └── guillaume/     # guillaume user (pro)
+├── flake.nix              # Minimal entry point (flake-parts + import-tree)
+├── flake.lock             # Dependency lock file
+├── disko/
+│   ├── honor.nix          # Disko partition config for honor (standalone, CLI usage)
+│   └── pro.nix            # Disko partition config for pro (standalone, CLI usage)
+├── patches/
+│   └── pam.nix            # Patched upstream pam.nix (2656 lines)
 └── modules/
-    ├── home/              # Home-manager base (deprecated)
-    └── features/          # Feature modules
-        ├── browser.nix    # Firefox & Chromium policies
-        ├── core.nix       # Security
-        ├── desktop.nix    # GNOME, GDM, PipeWire
-        ├── ide.nix        # Git, lazygit, opencode
-        ├── office.nix     # Office packages
-        ├── plasma.nix     # KDE Plasma
-        └── server.nix     # Core dumps, audit logging
+    ├── meta.nix           # Top-level options (emails, API keys, vars)
+    ├── infra.nix          # configurations.nixos, nixosConfigurations, HM, devshell
+    │
+    ├── # ── NixOS feature modules ──
+    ├── browser.nix        # Firefox & Chromium policies
+    ├── core.nix           # rtkit, ssh, netbird, zsh, firewall
+    ├── debug.nix          # htop, btop, wireshark, etc.
+    ├── desktop.nix        # GNOME, GDM, PipeWire, Flatpak
+    ├── ide.nix            # git, lazygit, opencode
+    ├── intel.nix          # Intel GPU tools
+    ├── journald.nix       # Journald configuration
+    ├── k3s.nix            # K3s server
+    ├── office.nix         # LibreOffice, Thunderbird, etc.
+    ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
+    ├── plasma.nix         # KDE Plasma + SDDM
+    ├── secureboot.nix     # Lanzaboote + Secure Boot
+    ├── security.nix       # AppArmor, fail2ban, firewall
+    │
+    ├── # ── Home-Manager feature modules ──
+    ├── codium.nix         # VSCodium config (HM)
+    ├── shell.nix          # tmux + zsh + zoxide (HM)
+    ├── ssh.nix            # SSH config (HM)
+    │
+    ├── # ── Host assemblies ──
+    ├── honor.nix          # Host honor + config specifique
+    ├── pro.nix            # Host pro + config specifique
+    ├── honor-disko.nix    # Disko inline (mirrors disko/honor.nix)
+    ├── honor-hardware.nix # Hardware config honor
+    ├── pro-disko.nix      # Disko inline (mirrors disko/pro.nix)
+    └── pro-hardware.nix   # Hardware config pro
 ```
 
 ## Building
 
 ```bash
 # Rebuild system (requires --impure for env vars)
-sudo -E nixos-rebuild switch --impure --flake .#$TARGET
+sudo -E nixos-rebuild switch --impure --flake .#honor
 
 # Update dependencies
 nix flake update
@@ -61,7 +73,7 @@ nix flake update
 nix fmt
 ```
 
-## Setup 
+## Setup
 
 ```bash
 # Retrieve repository
@@ -69,13 +81,15 @@ nix-shell -p git vscodium
 git clone git@github.com:GuillaumeASSIER/nixos.git
 cd nixos/
 
-# Format the disk (pro)
+# Format the disk (e.g. for pro)
 sudo nix --experimental-features "nix-command flakes" \
-    run github:nix-community/disko/latest -- --mode destroy,format,mount inventaire/hosts/$TARGET/disko.nix
+    run github:nix-community/disko/latest -- --mode destroy,format,mount disko/pro.nix
 
-# Mount the filesystem
+# Verify mounts
 mount | grep /mnt
 
-# Build the correct system
-sudo nixos-install --flake .#$TARGET
+# Install the system
+sudo nixos-install --flake .#pro
 ```
+
+> **Note:** The `disko/` directory contains standalone disko config files usable directly with the `disko` CLI. The `modules/*-disko.nix` files contain the same configs inline for the NixOS module system. If you modify partitioning, update both.
