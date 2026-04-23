@@ -20,42 +20,45 @@ Features:
 
 ## Structure
 
+Uses the dendritic pattern: `flake-parts` + `import-tree` auto-imports all Nix modules from `modules/`. Each module is a top-level flake-parts module declaring its own features via `flake.modules.nixos.*` or `flake.modules.homeManager.*`. Host assemblies compose features using `configurations.nixos.<host>`.
+
 ```
 .
-├── flake.nix              # Main flake entry (inputs, outputs, formatter)
+├── flake.nix              # Minimal entry point (flake-parts + import-tree)
 ├── flake.lock             # Dependency lock file
-├── inventaire/
-│   ├── hosts/             # Machine configurations
-│   │   ├── honor/         # Honor laptop configuration
-│   │   │   ├── default.nix    # Entry point for honor machine
-│   │   │   ├── configuration.nix  # Main system config
-│   │   │   └── hardware.nix   # Hardware & DSDT overlay config
-│   │   └── pro/            # Pro machine configuration
-│   │       ├── default.nix    # Entry point for pro machine
-│   │       ├── configuration.nix  # Main system config
-│   │       └── hardware.nix   # Hardware config
-│   └── users/             # User configurations
-│       ├── heap/          # heap user home config
-│       │   └── home.nix   # User-level packages & programs
-│       └── guillaume/     # guillaume user home config
-│           └── home.nix   # User-level packages & programs
+├── patches/
+│   └── pam.nix            # Patched upstream pam.nix (2656 lines)
 └── modules/
-    ├── fixes/              # Patches for upstream nixpkgs bugs
-    │   ├── pam-apparmor-include-substack.nix  # Disables stock pam.nix, imports patched copy
-    │   └── pam.nix         # Patched pam.nix (filters include/substack from AppArmor check)
-    ├── home/              # Home-manager base configuration (deprecated)
-    │   └── home.nix       # Moved to inventaire/users/
-    └── features/          # Feature modules
-        ├── browser.nix    # Firefox & Chromium policies
-        ├── core.nix       # Security (apparmor, fail2ban, firewall, ssh)
-        ├── desktop.nix    # GNOME, GDM, PipeWire, Flatpak
-
-        ├── ide.nix        # Git, lazygit, opencode
-        ├── journald.nix   # Journald configuration
-        ├── office.nix     # Office packages
-        ├── plasma.nix     # KDE Plasma desktop
-        ├── secureboot.nix # Secure boot configuration
-        └── server.nix     # Core dumps, audit logging
+    ├── meta.nix           # Top-level options (emails, API keys, vars)
+    ├── infra.nix          # configurations.nixos, nixosConfigurations, HM, devshell
+    │
+    ├── # ── NixOS feature modules ──
+    ├── browser.nix        # Firefox & Chromium policies
+    ├── core.nix           # rtkit, ssh, netbird, zsh, firewall
+    ├── debug.nix          # htop, btop, wireshark, etc.
+    ├── desktop.nix        # GNOME, GDM, PipeWire, Flatpak
+    ├── ide.nix            # git, lazygit, opencode
+    ├── intel.nix          # Intel GPU tools
+    ├── journald.nix       # Journald configuration
+    ├── k3s.nix            # K3s server
+    ├── office.nix         # LibreOffice, Thunderbird, etc.
+    ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
+    ├── plasma.nix         # KDE Plasma + SDDM
+    ├── secureboot.nix     # Lanzaboote + Secure Boot
+    ├── security.nix       # AppArmor, fail2ban, firewall
+    │
+    ├── # ── Home-Manager feature modules ──
+    ├── codium.nix         # VSCodium config (HM)
+    ├── shell.nix          # tmux + zsh + zoxide (HM)
+    ├── ssh.nix            # SSH config (HM)
+    │
+    ├── # ── Host assemblies ──
+    ├── honor.nix          # Host honor + config specifique
+    ├── pro.nix            # Host pro + config specifique
+    ├── honor-disko.nix    # Partitionnement honor
+    ├── honor-hardware.nix # Hardware config honor
+    ├── pro-disko.nix      # Partitionnement pro
+    ├── pro-hardware.nix   # Hardware config pro
 ```
 
 ## Common Commands
