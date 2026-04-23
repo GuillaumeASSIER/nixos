@@ -1,1 +1,0 @@
-{imports = [./configuration.nix ./hardware.nix ../../../modules/features/secureboot.nix];}

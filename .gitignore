@@ -3,6 +3,8 @@ result
 result-*
 
 # Ignore automatically generated direnv output
+.envrc
 .direnv
 
 .agents
+.vscode

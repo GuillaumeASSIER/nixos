@@ -9,10 +9,16 @@
   },
   "permission": {
     "bash": {
-      "*": "allow",
       "git push *force*": "ask",
       "git push -f*": "ask",
-      "git push --force*": "ask"
+      "git push --force*": "ask",
+      "cat .envrc": "deny"
+    },
+    "read": {
+      ".envrc": "deny"
+    },
+    "edit": {
+      ".envrc": "deny"
     }
   }
 }
