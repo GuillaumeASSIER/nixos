@@ -15,10 +15,12 @@
       "cat .envrc": "deny"
     },
     "read": {
-      ".envrc": "deny"
+      ".envrc": "deny",
+      ".vault_pass": "deny"
     },
     "edit": {
-      ".envrc": "deny"
+      ".envrc": "deny",
+      ".vault_pass": "deny"
     }
   }
 }
