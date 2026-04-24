@@ -81,6 +81,7 @@ in {
         k9s
         kubernetes-helm
         fluxcd
+        flux9s
         kubeseal
 
         opentofu
@@ -139,6 +140,7 @@ in {
         isNormalUser = true;
         group = "guillaume";
         extraGroups = ["wheel" "docker" "libvirtd"];
+        shell = pkgs.zsh;
       };
       users.groups.guillaume = {};
 
