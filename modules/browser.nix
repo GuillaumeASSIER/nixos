@@ -29,6 +29,14 @@
               install_url = "https://addons.mozilla.org/firefox/downloads/latest/emoji-sav/latest.xpi";
               installation_mode = "force_installed";
             };
+            "@testpilot-containers" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/multi-account-containers/latest.xpi";
+              installation_mode = "force_installed";
+            };
+            "{c2c003ee-bd69-42a2-b0e9-6f34222cb046}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/auto-tab-discard/latest.xpi";
+              installation_mode = "force_installed";
+            };
           };
 
           Preferences = {

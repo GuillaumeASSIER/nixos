@@ -12,7 +12,7 @@ in {
           secureboot
           k3s
           debug
-          pam-fix
+          # pam-fix
           pro-hardware
           pro-disko
         ]
@@ -115,6 +115,7 @@ in {
         logseq
         rtk
         vlc
+        brave
       ];
 
       programs = {
@@ -132,6 +133,14 @@ in {
           nix-direnv.enable = true;
         };
         zsh.enable = true;
+      };
+
+      services.libinput = {
+        enable = true;
+        touchpad = {
+          tapping = true;
+          clickMethod = "clickfinger";
+        };
       };
 
       services.fwupd.enable = true;
@@ -185,6 +194,15 @@ in {
                 options = {
                   baseURL = config.openwebui.apiUrl;
                   apiKey = config.openwebui.apiKey;
+                };
+                models = {
+                  "qwen3.6-35b-a3b" = {
+                    name = "RTX.qwen3.6-35b-a3b";
+                    limit = {
+                      context = 32000;
+                      output = 4096;
+                    };
+                  };
                 };
               };
             };
