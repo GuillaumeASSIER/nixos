@@ -16,7 +16,7 @@ in {
           secureboot
           debug
           intel
-          pam-fix
+          # pam-fix
           honor-hardware
           honor-disko
         ]
