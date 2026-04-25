@@ -30,8 +30,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v16
 
-      - uses: DeterminateSystems/magic-nix-cache-action@v9
-
       - name: Build system closure
         run: |
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel --print-out-paths > toplevel-path.txt

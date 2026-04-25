@@ -23,8 +23,6 @@ jobs:
 
       - uses: DeterminateSystems/nix-installer-action@v16
 
-      - uses: DeterminateSystems/magic-nix-cache-action@v9
-
       - name: Check formatting
         run: |
           nix fmt -- .
@@ -63,8 +61,6 @@ jobs:
           persist-credentials: false
 
       - uses: DeterminateSystems/nix-installer-action@v16
-
-      - uses: DeterminateSystems/magic-nix-cache-action@v9
 
       - name: Build ${{ matrix.host }}
         run: |
