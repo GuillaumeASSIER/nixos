@@ -2,7 +2,7 @@ name: Security Scan
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, dev]
   pull_request:
     branches: [main, master]
 
@@ -24,26 +24,27 @@ jobs:
         host: [honor, pro]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
         with:
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
 
       - name: Build system closure
+        id: build
         run: |
           nix build .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel --print-out-paths > toplevel-path.txt
+          echo "toplevel=$(cat toplevel-path.txt)" >> $GITHUB_OUTPUT
 
       - name: Generate SBOM
-        uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0
         with:
-          path: .
-          image: .
+          path: ${{ steps.build.outputs.toplevel }}
           format: spdx-json
           output-file: sbom.spdx.json
 
       - name: Run Grype scan
-        uses: anchore/scan-action@v6
+        uses: anchore/scan-action@1638637db639e0ade3258b51db49a9a137574c3e # v6
         id: grype
         with:
           sbom: sbom.spdx.json
@@ -51,14 +52,14 @@ jobs:
           fail-build: true
 
       - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@95e58e9a2cdfd71adc6e0353d5c52f41a045d225 # v4
         if: always()
         with:
           sarif_file: results.sarif
           category: grype-${{ matrix.host }}
 
       - name: Upload SBOM artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         if: always()
         with:
           name: security-reports-${{ matrix.host }}

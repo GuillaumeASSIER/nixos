@@ -1,10 +1,14 @@
-{config, inputs, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   inherit (config.flake.modules) nixos homeManager;
 in {
   configurations.nixos.pro = {
     module = {pkgs, ...}: {
-      imports =
-        with nixos; [
+      imports = with nixos;
+        [
           core
           plasma
           ide
@@ -103,6 +107,7 @@ in {
         podman-compose
         buildah
         virt-manager
+        act
 
         pass
         sops
