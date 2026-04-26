@@ -58,12 +58,11 @@
     );
   };
 
-  config.flake.devShells.x86_64-linux.default =
-    inputs.nixpkgs.legacyPackages.x86_64-linux.mkShell {
-      buildInputs = [
-        inputs.alejandra.defaultPackage.x86_64-linux
-        inputs.nixpkgs.legacyPackages.x86_64-linux.statix
-        inputs.nixpkgs.legacyPackages.x86_64-linux.deadnix
-      ];
-    };
+  config.flake.devShells.x86_64-linux.default = inputs.nixpkgs.legacyPackages.x86_64-linux.mkShell {
+    buildInputs = [
+      inputs.alejandra.defaultPackage.x86_64-linux
+      inputs.nixpkgs.legacyPackages.x86_64-linux.statix
+      inputs.nixpkgs.legacyPackages.x86_64-linux.deadnix
+    ];
+  };
 }

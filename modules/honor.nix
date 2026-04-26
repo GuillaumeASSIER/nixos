@@ -1,10 +1,14 @@
-{config, inputs, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   inherit (config.flake.modules) nixos homeManager;
 in {
   configurations.nixos.honor = {
     module = {pkgs, ...}: {
-      imports =
-        with nixos; [
+      imports = with nixos;
+        [
           core
           desktop
           ide
