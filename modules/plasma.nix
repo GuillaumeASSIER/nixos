@@ -1,5 +1,10 @@
 {...}: {
   flake.modules.nixos.plasma = {pkgs, ...}: {
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+
     services = {
       flatpak.enable = true;
       displayManager.sddm.enable = true;
