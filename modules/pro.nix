@@ -99,7 +99,9 @@ in {
         pre-commit
         python3
         nodejs
+        pnpm
         go
+        go-task
         rustc
         cargo
 
@@ -112,6 +114,7 @@ in {
         pass
         sops
         gnupg
+        bluez
 
         libreoffice
         thunderbird

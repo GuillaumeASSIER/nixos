@@ -17,6 +17,10 @@
     nixos-hardware = {
       url = "github:GuillaumeASSIER/nixos-hardware/thinkpad-t14s-gen6";
     };
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:

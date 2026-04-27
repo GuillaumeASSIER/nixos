@@ -7,7 +7,7 @@
         enable = true;
         extraGSettingsOverrides = ''
           [org.gnome.shell]
-          enabled-extensions=['appindicator-support@rgcjonas.gmail.com','blur-my-shell@aunetx.de']
+          enabled-extensions=['appindicator-support@rgcjonas.gmail.com','blur-my-shell@aunetx.de','status-tray@elmopl.rs']
         '';
       };
       printing.enable = true;
@@ -20,10 +20,9 @@
       pulseaudio.enable = false;
     };
 
-    environment.systemPackages = with pkgs; [
-      gnomeExtensions.appindicator
-      gnomeExtensions.blur-my-shell
-    ];
+    environment.systemPackages = builtins.attrValues {
+      inherit (pkgs.gnomeExtensions) appindicator blur-my-shell status-tray;
+    };
 
     services.udev.packages = with pkgs; [
       gnome-settings-daemon
