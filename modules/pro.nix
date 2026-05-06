@@ -124,7 +124,15 @@ in {
         rtk
         vlc
         brave
+        playwright-driver
+        playwright-driver.browsers
       ];
+
+      environment.variables = {
+        PLAYWRIGHT_BROWSERS_PATH = "${pkgs.playwright-driver.browsers}";
+        PLAYWRIGHT_SKIP_VALIDATE_HOST_REQUIREMENTS = "true";
+        PLAYWRIGHT_HOST_PLATFORM_OVERRIDE = "ubuntu-24.04";
+      };
 
       programs = {
         git = {
@@ -196,20 +204,25 @@ in {
           cfg = {
             "$schema" = "https://opencode.ai/config.json";
             provider = {
-              openwebui = {
+              litellm = {
                 npm = "@ai-sdk/openai-compatible";
-                name = "Internal LLM  ";
+                name = "Internal LiteLLM";
                 options = {
                   baseURL = config.openwebui.apiUrl;
                   apiKey = config.openwebui.apiKey;
                 };
                 models = {
-                  "qwen3.6-35b-a3b" = {
-                    name = "RTX.qwen3.6-35b-a3b";
-                    limit = {
-                      context = 32000;
-                      output = 4096;
-                    };
+                  "gemma3-27" = {
+                    name = "gemma3-27";
+                  };
+                  "rtx-qwen3-6-35b-a3b" = {
+                    name = "rtx-qwen3-6-35b-a3b";
+                  };
+                  "gptoss-20b" = {
+                    name = "gptoss-20b";
+                  };
+                  "phi4-14" = {
+                    name = "phi4-14";
                   };
                 };
               };

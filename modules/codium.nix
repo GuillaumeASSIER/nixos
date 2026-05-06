@@ -1,8 +1,7 @@
 {...}: {
   flake.modules.homeManager.codium = {pkgs, ...}: {
-    programs.vscode = {
+    programs.vscodium = {
       enable = true;
-      package = pkgs.vscodium;
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
           shd101wyy.markdown-preview-enhanced
@@ -19,6 +18,8 @@
           gitlab.gitlab-workflow
           github.github-vscode-theme
           vue.volar
+          eamodio.gitlens
+          mhutchie.git-graph
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
@@ -39,6 +40,7 @@
             "https://schemastore.azurewebsites.net/"
             "https://www.schemastore.org/"
           ];
+          "redhat.telemetry.enabled" = false;
         };
       };
     };
