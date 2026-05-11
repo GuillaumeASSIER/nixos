@@ -4,6 +4,8 @@
       git
       lazygit
       opencode
+      goose-cli
+      openssl
     ];
   };
 }

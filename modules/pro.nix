@@ -194,8 +194,11 @@ in {
       };
     };
 
-    homeManager.guillaume = {pkgs, ...}: {
-      imports = with homeManager; [codium shell ssh];
+    homeManager.guillaume = {
+      pkgs,
+      ...
+    }: {
+      imports = with homeManager; [codium shell ssh nixvim];
 
       home.stateVersion = "25.11";
 
