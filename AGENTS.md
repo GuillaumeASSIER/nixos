@@ -62,68 +62,30 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
     │
     ├── # ── NixOS feature modules (flake.modules.nixos.*) ──
     ├── browser.nix        # Firefox & Chromium policies
-    ├── core.nix           # rtkit, ssh, netbird, zsh, firewall
+    ├── core.nix           # rtkit, ssh, netbird, zsh
     ├── debug.nix          # htop, btop, wireshark, etc.
-    ├── desktop.nix        # GNOME, GDM, PipeWire, Flatpak
+    ├── gnome.nix          # GNOME, GDM, PipeWire, Flatpak, fonts, extensions
     ├── ide.nix            # git, lazygit, opencode
-    ├── intel.nix          # Intel GPU tools
+    ├── intel.nix          # Intel GPU tools (honor only)
     ├── journald.nix       # Journald configuration
     ├── k3s.nix            # K3s server
+    ├── nixvim.nix         # Neovim nixvim config (HM)
     ├── office.nix         # LibreOffice, Thunderbird, etc.
-    ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
-    ├── plasma.nix         # KDE Plasma + SDDM
     ├── secureboot.nix     # Lanzaboote + Secure Boot
     ├── security.nix       # AppArmor, fail2ban, firewall
     │
     ├── # ── Home-Manager feature modules (flake.modules.homeManager.*) ──
     ├── codium.nix         # VSCodium config (HM)
     ├── shell.nix          # tmux + zsh + zoxide (HM)
-    ├── ssh.nix            # SSH config (HM)
+    ├── ssh.nix            # SSH client config (HM)
     │
     ├── # ── Host assemblies (configurations.nixos.<host>) ──
     ├── honor.nix          # Host honor — composes NixOS + HM modules
     ├── pro.nix            # Host pro — composes NixOS + HM modules
     ├── honor-disko.nix    # Disko inline (mirrors disko/honor.nix)
-    ├── honor-hardware.nix # Hardware config honor
+    ├── honor-hardware.nix # Hardware config honor (DSDT, kernel modules)
     ├── pro-disko.nix      # Disko inline (mirrors disko/pro.nix)
-    └── pro-hardware.nix   # Hardware config pro
-```
-.
-├── flake.nix              # Minimal entry point (flake-parts + import-tree)
-├── flake.lock             # Dependency lock file
-├── patches/
-│   └── pam.nix            # Patched upstream pam.nix (2656 lines)
-└── modules/
-    ├── meta.nix           # Top-level options (emails, API keys, vars)
-    ├── infra.nix          # configurations.nixos, nixosConfigurations, HM, devshell
-    │
-    ├── # ── NixOS feature modules ──
-    ├── browser.nix        # Firefox & Chromium policies
-    ├── core.nix           # rtkit, ssh, netbird, zsh, firewall
-    ├── debug.nix          # htop, btop, wireshark, etc.
-    ├── desktop.nix        # GNOME, GDM, PipeWire, Flatpak
-    ├── ide.nix            # git, lazygit, opencode
-    ├── intel.nix          # Intel GPU tools
-    ├── journald.nix       # Journald configuration
-    ├── k3s.nix            # K3s server
-    ├── office.nix         # LibreOffice, Thunderbird, etc.
-    ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
-    ├── plasma.nix         # KDE Plasma + SDDM
-    ├── secureboot.nix     # Lanzaboote + Secure Boot
-    ├── security.nix       # AppArmor, fail2ban, firewall
-    │
-    ├── # ── Home-Manager feature modules ──
-    ├── codium.nix         # VSCodium config (HM)
-    ├── shell.nix          # tmux + zsh + zoxide (HM)
-    ├── ssh.nix            # SSH config (HM)
-    │
-    ├── # ── Host assemblies ──
-    ├── honor.nix          # Host honor + config specifique
-    ├── pro.nix            # Host pro + config specifique
-    ├── honor-disko.nix    # Partitionnement honor
-    ├── honor-hardware.nix # Hardware config honor
-    ├── pro-disko.nix      # Partitionnement pro
-    ├── pro-hardware.nix   # Hardware config pro
+    └── pro-hardware.nix   # Hardware config pro (AMD ROCm)
 ```
 
 ## Common Commands
@@ -136,10 +98,16 @@ sudo -E nixos-rebuild switch --impure --flake .#honor
 nix flake update
 
 # Build system (without switching)
-sudo -E nixos-rebuild  --impure --flake .#honor
+sudo -E nixos-rebuild --impure --flake .#honor
+
+# Run all flake checks
+nix flake check --impure
 
 # Format nix files
 nix fmt
+
+# Run format + lint + dead code checks locally
+nix shell nixpkgs#alejandra nixpkgs#statix nixpkgs#deadnix -c sh -c 'alejandra --check . && statix check && deadnix . '
 ```
 
 ## Environment Variables
@@ -169,3 +137,7 @@ This project includes MCP-NixOS integration (`.mcp.json`) for AI assistants. It 
 - Unfree packages enabled
 - Uses `disko` for disk partitioning
 - Dev shell includes: alejandra, statix, deadnix
+
+## Known Issues & Tech Debt
+
+See `ROADMAP.md` for migration history. Current outstanding items below.

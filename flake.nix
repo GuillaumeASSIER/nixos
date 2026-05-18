@@ -17,12 +17,12 @@
     nixos-hardware = {
       url = "github:GuillaumeASSIER/nixos-hardware/thinkpad-t14s-gen6";
     };
-    niri = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixvim = {
       url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

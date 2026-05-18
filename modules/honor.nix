@@ -20,7 +20,6 @@ in {
           secureboot
           debug
           intel
-          # pam-fix
           honor-hardware
           honor-disko
         ]
@@ -180,12 +179,14 @@ in {
           sandbox = true;
         };
       };
+
+
     };
 
     homeManager.heap = {pkgs, ...}: {
-      imports = with homeManager; [codium shell ssh];
+      imports = with homeManager; [codium shell ssh desktop];
 
-      home.stateVersion = "25.11";
+      home.stateVersion = "26.05";
 
       home.packages = with pkgs; [
         gh

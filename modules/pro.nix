@@ -10,13 +10,12 @@ in {
       imports = with nixos;
         [
           core
-          plasma
+          desktop
           ide
           browser
           secureboot
           k3s
           debug
-          # pam-fix
           pro-hardware
           pro-disko
         ]
@@ -69,6 +68,7 @@ in {
 
       environment.systemPackages = with pkgs; [
         neovim
+        xxd
         wget
         tmux
         zellij
@@ -98,13 +98,19 @@ in {
         lazygit
         pre-commit
         python3
+        pyright
         nodejs
         pnpm
+        typescript-language-server
+        ansible-language-server
         go
+        gopls
         go-task
         rustc
         cargo
+        rust-analyzer
 
+        docker-language-server
         podman
         podman-compose
         buildah
@@ -120,6 +126,7 @@ in {
         thunderbird
         pdfarranger
         element-desktop
+        opencode-desktop
         logseq
         rtk
         vlc
@@ -194,13 +201,10 @@ in {
       };
     };
 
-    homeManager.guillaume = {
-      pkgs,
-      ...
-    }: {
-      imports = with homeManager; [codium shell ssh nixvim];
+    homeManager.guillaume = {pkgs, ...}: {
+      imports = with homeManager; [codium shell ssh desktop];
 
-      home.stateVersion = "25.11";
+      home.stateVersion = "26.05";
 
       xdg.configFile."opencode/opencode.json" = {
         source = let
@@ -215,17 +219,11 @@ in {
                   apiKey = config.openwebui.apiKey;
                 };
                 models = {
-                  "gemma3-27" = {
-                    name = "gemma3-27";
-                  };
-                  "rtx-qwen3-6-35b-a3b" = {
+                  "qwen3.6-35b-a3b" = {
                     name = "rtx-qwen3-6-35b-a3b";
                   };
-                  "gptoss-20b" = {
-                    name = "gptoss-20b";
-                  };
-                  "phi4-14" = {
-                    name = "phi4-14";
+                  "qwen3.6-27b" = {
+                    name = "qwen3.6-27b";
                   };
                 };
               };
@@ -233,6 +231,96 @@ in {
           };
         in
           pkgs.writeText "opencode.json" (builtins.toJSON cfg);
+      };
+
+      xdg.configFile."goose/goose.yaml" = {
+        source = pkgs.writeText "goose.yaml" ''
+          extensions:
+            code_execution:
+              enabled: false
+              type: platform
+              name: code_execution
+              description: Goose will make extension calls through code execution, saving tokens
+              display_name: Code Mode
+              bundled: true
+              available_tools: []
+            extensionmanager:
+              enabled: true
+              type: platform
+              name: Extension Manager
+              description: Enable extension management tools for discovering, enabling, and disabling extensions
+              display_name: Extension Manager
+              bundled: true
+              available_tools: []
+            kubernetes-mcp-server:
+              name: Kubernetes
+              cmd: npx
+              args:
+              - -y
+              - kubernetes-mcp-server@latest
+              enabled: true
+              type: stdio
+              timeout: 300
+              description: MCP server for interacting with Kubernetes clusters
+            summon:
+              enabled: true
+              type: platform
+              name: summon
+              description: Load knowledge and delegate tasks to subagents
+              display_name: Summon
+              bundled: true
+              available_tools: []
+            tom:
+              enabled: true
+              type: platform
+              name: tom
+              description: Inject custom context into every turn via GOOSE_MOIM_MESSAGE_TEXT and GOOSE_MOIM_MESSAGE_FILE environment variables
+              display_name: Top Of Mind
+              bundled: true
+              available_tools: []
+            developer:
+              enabled: true
+              type: platform
+              name: developer
+              description: Write and edit files, and execute shell commands
+              display_name: Developer
+              bundled: true
+              available_tools: []
+            apps:
+              enabled: true
+              type: platform
+              name: apps
+              description: Create and manage custom Goose apps through chat. Apps are HTML/CSS/JavaScript and run in sandboxed windows.
+              display_name: Apps
+              bundled: true
+              available_tools: []
+            analyze:
+              enabled: true
+              type: platform
+              name: analyze
+              description: 'Analyze code structure with tree-sitter: directory overviews, file details, symbol call graphs'
+              display_name: Analyze
+              bundled: true
+              available_tools: []
+            todo:
+              enabled: true
+              type: platform
+              name: todo
+              description: Enable a todo list for goose so it can keep track of what it is doing
+              display_name: Todo
+              bundled: true
+              available_tools: []
+            kubernetes:
+              command: npx
+              args:
+              - -y
+              - kubernetes-mcp-server@latest
+          GOOSE_TELEMETRY_ENABLED: false
+          GOOSE_PROVIDER: litellm
+          GOOSE_MODEL: rtx-qwen3-6-35b-a3b
+          GOOSE_CLI_THEME: ansi
+          LITELLM_HOST: https://litellm.vates.tech/
+        '';
       };
 
       home.packages = with pkgs; [
