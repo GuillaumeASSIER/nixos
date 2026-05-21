@@ -10,14 +10,20 @@
         '';
       };
       printing.enable = true;
-      pipewire = {
-        enable = true;
-        alsa.enable = true;
-        alsa.support32Bit = true;
-        pulse.enable = true;
-      };
-      pulseaudio.enable = false;
     };
+
+    hardware.bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+
+    services.pipewire = {
+      enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      pulse.enable = true;
+    };
+    services.pulseaudio.enable = false;
 
     fonts = {
       packages = with pkgs; [
