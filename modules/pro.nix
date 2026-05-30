@@ -225,6 +225,9 @@ in {
                   "qwen3.6-27b" = {
                     name = "qwen3.6-27b";
                   };
+                  "qwen3-coder" = {
+                    name = "qwen3-coder";
+                  };
                 };
               };
             };
@@ -349,15 +352,13 @@ in {
           };
         };
 
-        ssh.matchBlocks."${config.vates.gitHost}" = {
-          identityFile = "~/.ssh/id_ed25519";
-          addKeysToAgent = "yes";
-          compression = true;
-          kexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
-          extraOptions = {
-            HostKeyAlgorithms = "ssh-ed25519";
-            PubkeyAcceptedAlgorithms = "ssh-ed25519";
-          };
+        ssh.settings."${config.vates.gitHost}" = {
+          IdentityFile = ["~/.ssh/id_ed25519"];
+          AddKeysToAgent = "yes";
+          Compression = true;
+          KexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
+          HostKeyAlgorithms = ["ssh-ed25519"];
+          PubkeyAcceptedAlgorithms = ["ssh-ed25519"];
         };
 
         zed-editor = {

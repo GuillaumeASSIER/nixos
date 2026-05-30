@@ -3,21 +3,19 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      matchBlocks = {
+      settings = {
         "*" = {
-          identityFile = "~/.ssh/id_ed25519";
-          addKeysToAgent = "yes";
-          compression = true;
+          IdentityFile = ["~/.ssh/id_ed25519"];
+          AddKeysToAgent = "yes";
+          Compression = true;
         };
         "github.com" = {
-          identityFile = "~/.ssh/id_ed25519";
-          addKeysToAgent = "yes";
-          compression = true;
-          kexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
-          extraOptions = {
-            HostKeyAlgorithms = "ssh-ed25519";
-            PubkeyAcceptedAlgorithms = "ssh-ed25519";
-          };
+          IdentityFile = ["~/.ssh/id_ed25519"];
+          AddKeysToAgent = "yes";
+          Compression = true;
+          KexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
+          HostKeyAlgorithms = ["ssh-ed25519"];
+          PubkeyAcceptedAlgorithms = ["ssh-ed25519"];
         };
       };
     };
