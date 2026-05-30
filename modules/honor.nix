@@ -223,15 +223,13 @@ in {
           };
         };
 
-        ssh.matchBlocks."gitea.com" = {
-          identityFile = "~/.ssh/id_ed25519";
-          addKeysToAgent = "yes";
-          compression = true;
-          kexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
-          extraOptions = {
-            HostKeyAlgorithms = "ssh-ed25519";
-            PubkeyAcceptedAlgorithms = "ssh-ed25519";
-          };
+        ssh.settings."gitea.com" = {
+          IdentityFile = ["~/.ssh/id_ed25519"];
+          AddKeysToAgent = "yes";
+          Compression = true;
+          KexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
+          HostKeyAlgorithms = ["ssh-ed25519"];
+          PubkeyAcceptedAlgorithms = ["ssh-ed25519"];
         };
 
         zed-editor = {
