@@ -144,6 +144,10 @@
               Value = false;
               Status = "locked";
             };
+            "browser.tabs.unloadOnLowMemory" = {
+              Value = true;
+              Status = "locked";
+            };
           };
         };
       };
