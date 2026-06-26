@@ -69,7 +69,7 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
     ├── intel.nix          # Intel GPU tools (honor only)
     ├── journald.nix       # Journald configuration
     ├── k3s.nix            # K3s server
-    ├── nixvim.nix         # Neovim nixvim config (HM)
+
     ├── office.nix         # LibreOffice, Thunderbird, etc.
     ├── secureboot.nix     # Lanzaboote + Secure Boot
     ├── security.nix       # AppArmor, fail2ban, firewall
