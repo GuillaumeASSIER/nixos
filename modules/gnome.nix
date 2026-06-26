@@ -6,7 +6,7 @@
         enable = true;
         extraGSettingsOverrides = ''
           [org.gnome.shell]
-          enabled-extensions=['appindicator-support@rgcjonas.gmail.com','blur-my-shell@aunetx.de','status-tray@elmopl.rs','vertical-workspaces@G-dH','caffeine@lysakovas','dash-to-dock@micxgx.gmail.com','justPerfection@agarr.dev']
+          enabled-extensions=['appindicator-support@rgcjonas.gmail.com','blur-my-shell@aunetx.de','status-tray@elmopl.rs','vertical-workspaces@G-dH','caffeine@lysakovas','dash-to-dock@micxgx.gmail.com','justPerfection@agarr.dev','net-speed-indicator@schlomp2000.gmail.com']
         '';
       };
       printing.enable = true;
