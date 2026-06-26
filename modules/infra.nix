@@ -28,15 +28,31 @@
     nixosConfigurations = lib.flip lib.mapAttrs config.configurations.nixos (
       name: cfg:
         inputs.nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+          };
           modules = [
             cfg.module
             inputs.home-manager.nixosModules.home-manager
             {
-              nixpkgs.config.allowUnfree = true;
+              nixpkgs.config = {
+                allowUnfree = true;
+                permittedInsecurePackages = ["electron-39.8.10"];
+              };
               home-manager = {
-                useGlobalPkgs = true;
+                useGlobalPkgs = false;
                 useUserPackages = true;
                 backupFileExtension = "backup";
+                extraSpecialArgs = {
+                  inherit inputs;
+                };
+                sharedModules = [
+                  ({ config, lib, ... }: {
+                    nixpkgs.config = {
+                      allowUnfree = true;
+                    };
+                  })
+                ];
                 users = lib.flip lib.mapAttrs cfg.homeManager (
                   username: hmCfg: hmCfg
                 );
