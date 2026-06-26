@@ -179,6 +179,16 @@ in {
 
       services.fwupd.enable = true;
 
+      zramSwap = {
+        enable = true;
+        algorithm = "zstd";
+        memoryPercent = 100;
+        priority = 100;
+        swapDevices = 1;
+      };
+
+      boot.kernel.sysctl."vm.swappiness" = 15;
+
       networking.firewall = {
         enable = true;
         allowPing = true;
