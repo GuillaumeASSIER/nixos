@@ -1,5 +1,5 @@
-export OPENWEBUI_API_KEY=""
-export OPENWEBUI_API_URL=""
+export LITELLM_API_KEY=""
+export LITELLM_API_URL=""
 export HEAP_EMAIL=""
 export GUILLAUME_EMAIL=""
 export VATES_GIT_HOST=""
