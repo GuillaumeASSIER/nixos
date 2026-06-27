@@ -896,6 +896,7 @@ in {
       networkmanagerapplet
       blueman
       bluez
+      kanshi
       autoKeymap
     ];
 
@@ -916,8 +917,6 @@ in {
       enable = true;
       powerOnBoot = true;
     };
-
-    services.kanshi.enable = true;
 
     services.hypridle.enable = true;
 
