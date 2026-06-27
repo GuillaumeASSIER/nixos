@@ -877,6 +877,11 @@ in {
         ENV{DEVNAME}!="", \
         RUN+="${autoKeymap}/bin/auto-keymap %k"
     '';
+
+    udevKeyboardRulePackage = pkgs.runCommand "hyprland-udev-rules" {} ''
+      mkdir -p $out/etc/udev/rules.d
+      cp ${udevKeyboardRule} $out/etc/udev/rules.d/90-keyboard-layout.rules
+    '';
   in {
     environment.systemPackages = with pkgs; [
       alacritty
@@ -901,7 +906,7 @@ in {
       autoKeymap
     ];
 
-    environment.etc."udev/rules.d/90-keyboard-layout.rules".source = udevKeyboardRule;
+    services.udev.packages = [udevKeyboardRulePackage];
 
     xdg.portal.enable = true;
     xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-hyprland];
