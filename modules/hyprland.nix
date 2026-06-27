@@ -4,45 +4,6 @@
   config,
   ...
 }: let
-  autoKeymap = pkgs.writeShellScriptBin "auto-keymap" ''
-    #!/usr/bin/env bash
-    # Switch Hyprland xkb layout when a USB keyboard is plugged in.
-    # Default: keyboard internal = fr (AZERTY), USB = us (QWERTY).
-    set -euo pipefail
-
-    DEV="''${1:-}"
-    logger -t auto-keymap "device added: ''${DEV}"
-
-    # Wait for Hyprland socket (max 10s)
-    for _ in $(seq 1 20); do
-      if [[ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] \
-        || ls /tmp/hypr/*/.socket.sock >/dev/null 2>&1; then
-        break
-      fi
-      sleep 0.5
-    done
-
-    # If the device is a USB keyboard (HID), apply the us layout
-    if [[ -e /sys/class/input/"$DEV"/device ]]; then
-      DEV_PATH=$(readlink -f /sys/class/input/"$DEV"/device || true)
-      if [[ "$DEV_PATH" == *usb* ]]; then
-        logger -t auto-keymap "USB keyboard detected ($DEV_PATH) -> switching to us"
-        hyprctl switchxkblayout all us 2>/dev/null || true
-        exit 0
-      fi
-    fi
-
-    # Otherwise, switch back to fr
-    logger -t auto-keymap "non-USB keyboard -> switching to fr"
-    hyprctl switchxkblayout all fr 2>/dev/null || true
-  '';
-
-  udevKeyboardRule = pkgs.writeText "90-keyboard-layout.rules" ''
-    ACTION=="add", SUBSYSTEM=="input", ENV{ID_INPUT_KEYBOARD}=="1", \
-      ENV{DEVNAME}!="", \
-      RUN+="${autoKeymap}/bin/auto-keymap %k"
-  '';
-
   hyprlandLua = ''
     -- ============================================================
     -- Hyprland configuration (Lua, 0.55+)
@@ -880,7 +841,46 @@ in {
     pkgs,
     lib,
     ...
-  }: {
+  }: let
+    autoKeymap = pkgs.writeShellScriptBin "auto-keymap" ''
+      #!/usr/bin/env bash
+      # Switch Hyprland xkb layout when a USB keyboard is plugged in.
+      # Default: keyboard internal = fr (AZERTY), USB = us (QWERTY).
+      set -euo pipefail
+
+      DEV="''${1:-}"
+      logger -t auto-keymap "device added: ''${DEV}"
+
+      # Wait for Hyprland socket (max 10s)
+      for _ in $(seq 1 20); do
+        if [[ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] \
+          || ls /tmp/hypr/*/.socket.sock >/dev/null 2>&1; then
+          break
+        fi
+        sleep 0.5
+      done
+
+      # If the device is a USB keyboard (HID), apply the us layout
+      if [[ -e /sys/class/input/"$DEV"/device ]]; then
+        DEV_PATH=$(readlink -f /sys/class/input/"$DEV"/device || true)
+        if [[ "$DEV_PATH" == *usb* ]]; then
+          logger -t auto-keymap "USB keyboard detected ($DEV_PATH) -> switching to us"
+          hyprctl switchxkblayout all us 2>/dev/null || true
+          exit 0
+        fi
+      fi
+
+      # Otherwise, switch back to fr
+      logger -t auto-keymap "non-USB keyboard -> switching to fr"
+      hyprctl switchxkblayout all fr 2>/dev/null || true
+    '';
+
+    udevKeyboardRule = pkgs.writeText "90-keyboard-layout.rules" ''
+      ACTION=="add", SUBSYSTEM=="input", ENV{ID_INPUT_KEYBOARD}=="1", \
+        ENV{DEVNAME}!="", \
+        RUN+="${autoKeymap}/bin/auto-keymap %k"
+    '';
+  in {
     environment.systemPackages = with pkgs; [
       alacritty
       quickshell
