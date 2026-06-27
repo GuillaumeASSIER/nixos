@@ -23,7 +23,7 @@ in {
           qemu
           honor-hardware
           honor-disko
-          hyprland
+          hyprland-session
         ]
         ++ [
           inputs.disko.nixosModules.default
@@ -192,7 +192,7 @@ in {
       inputs,
       ...
     }: {
-      imports = with homeManager; [codium shell ssh desktop hyprland];
+      imports = with homeManager; [codium shell ssh desktop hyprland-session];
 
       home.stateVersion = "26.05";
 
