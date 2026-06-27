@@ -13,6 +13,15 @@
     {
       "matchManagers": ["nix"],
       "groupName": "nix-dependencies"
+    },
+    {
+      "matchManagers": ["github-actions"],
+      "groupName": "ci-github-actions",
+      "pinDigests": true,
+      "schedule": ["every 2 weeks on Monday"],
+      "automerge": true,
+      "automergeType": "pr",
+      "platformAutomerge": true
     }
   ]
 }
