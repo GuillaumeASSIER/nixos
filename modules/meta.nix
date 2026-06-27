@@ -10,14 +10,14 @@
       default = builtins.getEnv "GUILLAUME_EMAIL";
     };
 
-    openwebui.apiUrl = lib.mkOption {
+    litellm.apiUrl = lib.mkOption {
       type = lib.types.str;
-      default = builtins.getEnv "OPENWEBUI_API_URL";
+      default = builtins.getEnv "LITELLM_API_URL";
     };
 
-    openwebui.apiKey = lib.mkOption {
+    litellm.apiKey = lib.mkOption {
       type = lib.types.str;
-      default = builtins.getEnv "OPENWEBUI_API_KEY";
+      default = builtins.getEnv "LITELLM_API_KEY";
     };
 
     vates.gitHost = lib.mkOption {

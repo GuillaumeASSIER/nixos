@@ -186,7 +186,11 @@ in {
 
     };
 
-    homeManager.heap = {pkgs, ...}: {
+    homeManager.heap = {
+      pkgs,
+      inputs,
+      ...
+    }: {
       imports = with homeManager; [codium shell ssh desktop];
 
       home.stateVersion = "26.05";
@@ -200,6 +204,7 @@ in {
         emote
         rtk
         appflowy
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.mimo-code
       ];
 
       dconf = {
@@ -272,6 +277,7 @@ in {
             alejandra
             statix
             deadnix
+            package-version-server
           ];
         };
       };

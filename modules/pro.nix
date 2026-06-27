@@ -6,7 +6,11 @@
   inherit (config.flake.modules) nixos homeManager;
 in {
   configurations.nixos.pro = {
-    module = {pkgs, ...}: {
+    module = {
+      pkgs,
+      inputs,
+      ...
+    }: {
       imports = with nixos;
         [
           core
@@ -14,7 +18,6 @@ in {
           ide
           browser
           secureboot
-          k3s
           debug
           pro-hardware
           pro-disko
@@ -27,6 +30,12 @@ in {
 
       nixpkgs.hostPlatform = "x86_64-linux";
       nixpkgs.config.allowUnfree = true;
+
+      nixpkgs.overlays = [
+        (final: prev: {
+          k9s = inputs.nixpkgs-unstable.legacyPackages.${final.stdenv.hostPlatform.system}.k9s;
+        })
+      ];
 
       boot = {
         kernelPackages = pkgs.linuxPackages_latest;
@@ -133,6 +142,8 @@ in {
         brave
         playwright-driver
         playwright-driver.browsers
+
+        apache-directory-studio
       ];
 
       environment.variables = {
@@ -168,6 +179,23 @@ in {
 
       services.fwupd.enable = true;
 
+      zramSwap = {
+        enable = true;
+        algorithm = "zstd";
+        memoryPercent = 100;
+        priority = 100;
+        swapDevices = 1;
+      };
+
+      boot.kernel.sysctl."vm.swappiness" = 15;
+
+      networking.firewall = {
+        enable = true;
+        allowPing = true;
+        allowedTCPPorts = [ 8000 8001 ];
+        allowedUDPPorts = [];
+      };
+
       users.users.guillaume = {
         isNormalUser = true;
         group = "guillaume";
@@ -183,7 +211,7 @@ in {
         }
       ];
 
-      system.stateVersion = "25.11";
+      system.stateVersion = "26.05";
 
       nix = {
         gc = {
@@ -201,7 +229,11 @@ in {
       };
     };
 
-    homeManager.guillaume = {pkgs, ...}: {
+    homeManager.guillaume = {
+      pkgs,
+      inputs,
+      ...
+    }: {
       imports = with homeManager; [codium shell ssh desktop];
 
       home.stateVersion = "26.05";
@@ -210,20 +242,18 @@ in {
         source = let
           cfg = {
             "$schema" = "https://opencode.ai/config.json";
+            autoupdate = false;
             provider = {
               litellm = {
                 npm = "@ai-sdk/openai-compatible";
                 name = "Internal LiteLLM";
                 options = {
-                  baseURL = config.openwebui.apiUrl;
-                  apiKey = config.openwebui.apiKey;
+                  baseURL = config.litellm.apiUrl;
+                  apiKey = config.litellm.apiKey;
                 };
                 models = {
                   "qwen3.6-35b-a3b" = {
                     name = "rtx-qwen3-6-35b-a3b";
-                  };
-                  "qwen3.6-27b" = {
-                    name = "qwen3.6-27b";
                   };
                   "qwen3-coder" = {
                     name = "qwen3-coder";
@@ -236,94 +266,60 @@ in {
           pkgs.writeText "opencode.json" (builtins.toJSON cfg);
       };
 
-      xdg.configFile."goose/goose.yaml" = {
-        source = pkgs.writeText "goose.yaml" ''
-          extensions:
-            code_execution:
-              enabled: false
-              type: platform
-              name: code_execution
-              description: Goose will make extension calls through code execution, saving tokens
-              display_name: Code Mode
-              bundled: true
-              available_tools: []
-            extensionmanager:
-              enabled: true
-              type: platform
-              name: Extension Manager
-              description: Enable extension management tools for discovering, enabling, and disabling extensions
-              display_name: Extension Manager
-              bundled: true
-              available_tools: []
-            kubernetes-mcp-server:
-              name: Kubernetes
-              cmd: npx
-              args:
-              - -y
-              - kubernetes-mcp-server@latest
-              enabled: true
-              type: stdio
-              timeout: 300
-              description: MCP server for interacting with Kubernetes clusters
-            summon:
-              enabled: true
-              type: platform
-              name: summon
-              description: Load knowledge and delegate tasks to subagents
-              display_name: Summon
-              bundled: true
-              available_tools: []
-            tom:
-              enabled: true
-              type: platform
-              name: tom
-              description: Inject custom context into every turn via GOOSE_MOIM_MESSAGE_TEXT and GOOSE_MOIM_MESSAGE_FILE environment variables
-              display_name: Top Of Mind
-              bundled: true
-              available_tools: []
-            developer:
-              enabled: true
-              type: platform
-              name: developer
-              description: Write and edit files, and execute shell commands
-              display_name: Developer
-              bundled: true
-              available_tools: []
-            apps:
-              enabled: true
-              type: platform
-              name: apps
-              description: Create and manage custom Goose apps through chat. Apps are HTML/CSS/JavaScript and run in sandboxed windows.
-              display_name: Apps
-              bundled: true
-              available_tools: []
-            analyze:
-              enabled: true
-              type: platform
-              name: analyze
-              description: 'Analyze code structure with tree-sitter: directory overviews, file details, symbol call graphs'
-              display_name: Analyze
-              bundled: true
-              available_tools: []
-            todo:
-              enabled: true
-              type: platform
-              name: todo
-              description: Enable a todo list for goose so it can keep track of what it is doing
-              display_name: Todo
-              bundled: true
-              available_tools: []
-            kubernetes:
-              command: npx
-              args:
-              - -y
-              - kubernetes-mcp-server@latest
-          GOOSE_TELEMETRY_ENABLED: false
-          GOOSE_PROVIDER: litellm
-          GOOSE_MODEL: rtx-qwen3-6-35b-a3b
-          GOOSE_CLI_THEME: ansi
-          LITELLM_HOST: https://litellm.vates.tech/
+      xdg.configFile."codex/config.toml" = {
+        source = pkgs.writeText "config.toml" ''
+          model = "qwen3-coder"
+          model_provider = "proxy"
+          approval_mode = "on-failure"
+          sandbox = "workspace-write"
+
+          [model_providers.proxy]
+          name = "OpenAI using LLM proxy"
+          base_url = "${config.litellm.apiUrl}"
+          env_key = "LITELLM_API_KEY"
+          wire_api = "responses"
         '';
+      };
+
+      xdg.configFile."codex/model_catalog.json" = {
+        source = pkgs.writeText "model_catalog.json" (builtins.toJSON {
+          models = [
+            {
+              slug = "qwen3-coder";
+              display_name = "Qwen3 Coder";
+              description = "Coding-optimized model served via the internal LiteLLM gateway.";
+              default_reasoning_level = "medium";
+              supported_reasoning_levels = [
+                {effort = "low"; description = "Fast responses with lighter reasoning";}
+                {effort = "medium"; description = "Balances speed and reasoning depth for everyday tasks";}
+                {effort = "high"; description = "Greater reasoning depth for complex problems";}
+                {effort = "xhigh"; description = "Extra high reasoning depth for complex problems";}
+              ];
+              shell_type = "shell_command";
+              visibility = "list";
+              supported_in_api = true;
+              priority = 1;
+              additional_speed_tiers = [];
+              service_tiers = [];
+              supports_reasoning_summaries = false;
+              default_reasoning_summary = "auto";
+              support_verbosity = false;
+              default_verbosity = "medium";
+              apply_patch_tool_type = "freeform";
+              web_search_tool_type = "text";
+              truncation_policy = {mode = "tokens"; limit = 10000;};
+              supports_parallel_tool_calls = true;
+              supports_image_detail_original = false;
+              context_window = 32768;
+              max_context_window = 32768;
+              effective_context_window_percent = 95;
+              experimental_supported_tools = [];
+              input_modalities = ["text"];
+              supports_search_tool = false;
+              use_responses_lite = false;
+            }
+          ];
+        });
       };
 
       home.packages = with pkgs; [
@@ -333,6 +329,12 @@ in {
         emote
         uv
         appflowy
+        sqlite-interactive
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.godap
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.mimo-code
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.codex
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.opencode
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.pi-coding-agent
       ];
 
       programs = {
@@ -398,6 +400,7 @@ in {
             alejandra
             statix
             deadnix
+            package-version-server
           ];
         };
       };
