@@ -7,6 +7,7 @@
       opencode
       goose-cli
       openssl
+      pi-coding-agent
     ];
 
     programs.git = {
