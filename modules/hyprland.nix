@@ -877,6 +877,10 @@
   '';
 in {
   flake.modules.nixos.hyprland-session = {
+    pkgs,
+    lib,
+    ...
+  }: {
     environment.systemPackages = with pkgs; [
       alacritty
       quickshell
