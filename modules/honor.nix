@@ -20,6 +20,7 @@ in {
           secureboot
           debug
           intel
+          qemu
           honor-hardware
           honor-disko
         ]
@@ -123,6 +124,8 @@ in {
         pass
 
         virt-manager
+        virt-viewer
+        remmina
 
         vlc
         element-desktop
