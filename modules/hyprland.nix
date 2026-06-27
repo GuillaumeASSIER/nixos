@@ -893,7 +893,7 @@ in {
       mako
       polkit_gnome
       pavucontrol
-      rofi-wayland
+      rofi
       playerctl
       brightnessctl
       wireplumber
@@ -949,7 +949,7 @@ in {
       alacritty
       quickshell
       mako
-      rofi-wayland
+      rofi
       playerctl
     ];
 
