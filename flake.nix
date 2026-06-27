@@ -18,7 +18,7 @@
     nixos-hardware = {
       url = "github:GuillaumeASSIER/nixos-hardware/thinkpad-t14s-gen6";
     };
-    gassier-nix-pkgs.url = "github:GuillaumeASSIER/gassier-nix-pkgs/dev";
+    gassier-nix-pkgs.url = "github:GuillaumeASSIER/gassier-nix-pkgs";
   };
 
   outputs = inputs:
