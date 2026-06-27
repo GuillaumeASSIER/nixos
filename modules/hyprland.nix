@@ -941,10 +941,7 @@ in {
     };
   };
 
-  flake.modules.homeManager.hyprland-session = {
-    pkgs,
-    ...
-  }: {
+  flake.modules.homeManager.hyprland-session = {pkgs, ...}: {
     home.packages = with pkgs; [
       alacritty
       quickshell
