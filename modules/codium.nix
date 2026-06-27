@@ -1,13 +1,11 @@
 {...}: {
   flake.modules.homeManager.codium = {pkgs, ...}: {
-    programs.vscode = {
+    programs.vscodium = {
       enable = true;
-      package = pkgs.vscodium;
       profiles.default = {
         extensions = with pkgs.vscode-extensions; [
           shd101wyy.markdown-preview-enhanced
           jnoortheen.nix-ide
-          arrterian.nix-env-selector
           redhat.vscode-yaml
           ms-azuretools.vscode-docker
           ms-kubernetes-tools.vscode-kubernetes-tools
@@ -20,23 +18,29 @@
           gitlab.gitlab-workflow
           github.github-vscode-theme
           vue.volar
+          eamodio.gitlens
+          mhutchie.git-graph
         ];
         userSettings = {
           "workbench.colorTheme" = "GitHub Light";
           "git.enableSmartCommit" = true;
           "git.postCommitCommand" = "sync";
+          "git.confirmSync" = false;
+          "git.fetchOnPull" = true;
+          "git.pruneOnFetch" = true;
           "gitlab.duoChat.enabled" = false;
           "gitlab.duoCodeSuggestions.enabled" = false;
-          "json.schemaDownload.trustedDomains" = {
-            "https://developer.microsoft.com/json-schemas/" = true;
-            "https://json-schema.org/" = true;
-            "https://json.schemastore.org/" = true;
-            "https://opencode.ai" = true;
-            "https://raw.githubusercontent.com/devcontainers/spec/" = true;
-            "https://raw.githubusercontent.com/microsoft/vscode/" = true;
-            "https://schemastore.azurewebsites.net/" = true;
-            "https://www.schemastore.org/" = true;
-          };
+          "json.schemaDownload.trustedDomains" = [
+            "https://developer.microsoft.com/json-schemas/"
+            "https://json-schema.org/"
+            "https://json.schemastore.org/"
+            "https://opencode.ai"
+            "https://raw.githubusercontent.com/devcontainers/spec/"
+            "https://raw.githubusercontent.com/microsoft/vscode/"
+            "https://schemastore.azurewebsites.net/"
+            "https://www.schemastore.org/"
+          ];
+          "redhat.telemetry.enabled" = false;
         };
       };
     };

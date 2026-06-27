@@ -13,7 +13,6 @@
       nmap
       mtr
       iperf3
-      wireshark
       ipcalc
       fping
     ];

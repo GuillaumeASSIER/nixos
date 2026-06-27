@@ -1,10 +1,14 @@
-{config, inputs, ...}: let
+{
+  config,
+  inputs,
+  ...
+}: let
   inherit (config.flake.modules) nixos homeManager;
 in {
   configurations.nixos.honor = {
     module = {pkgs, ...}: {
-      imports =
-        with nixos; [
+      imports = with nixos;
+        [
           core
           desktop
           ide
@@ -16,7 +20,7 @@ in {
           secureboot
           debug
           intel
-          pam-fix
+          qemu
           honor-hardware
           honor-disko
         ]
@@ -120,6 +124,8 @@ in {
         pass
 
         virt-manager
+        virt-viewer
+        remmina
 
         vlc
         element-desktop
@@ -176,12 +182,18 @@ in {
           sandbox = true;
         };
       };
+
+
     };
 
-    homeManager.heap = {pkgs, ...}: {
-      imports = with homeManager; [codium shell ssh];
+    homeManager.heap = {
+      pkgs,
+      inputs,
+      ...
+    }: {
+      imports = with homeManager; [codium shell ssh desktop];
 
-      home.stateVersion = "25.11";
+      home.stateVersion = "26.05";
 
       home.packages = with pkgs; [
         gh
@@ -192,6 +204,7 @@ in {
         emote
         rtk
         appflowy
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.mimo-code
       ];
 
       dconf = {
@@ -218,15 +231,13 @@ in {
           };
         };
 
-        ssh.matchBlocks."gitea.com" = {
-          identityFile = "~/.ssh/id_ed25519";
-          addKeysToAgent = "yes";
-          compression = true;
-          kexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
-          extraOptions = {
-            HostKeyAlgorithms = "ssh-ed25519";
-            PubkeyAcceptedAlgorithms = "ssh-ed25519";
-          };
+        ssh.settings."gitea.com" = {
+          IdentityFile = ["~/.ssh/id_ed25519"];
+          AddKeysToAgent = "yes";
+          Compression = true;
+          KexAlgorithms = ["sntrup761x25519-sha512@openssh.com"];
+          HostKeyAlgorithms = ["ssh-ed25519"];
+          PubkeyAcceptedAlgorithms = ["ssh-ed25519"];
         };
 
         zed-editor = {
@@ -266,6 +277,7 @@ in {
             alejandra
             statix
             deadnix
+            package-version-server
           ];
         };
       };
