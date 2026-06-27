@@ -1,11 +1,7 @@
 {...}: {
   flake.modules.nixos.secureboot = {pkgs, ...}: {
     boot = {
-      loader = {
-        systemd-boot.enable = false;
-        efi.canTouchEfiVariables = true;
-        systemd-boot.configurationLimit = 4;
-      };
+      loader.efi.canTouchEfiVariables = true;
       lanzaboote = {
         enable = true;
         pkiBundle = "/var/lib/sbctl";
