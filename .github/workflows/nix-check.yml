@@ -17,11 +17,20 @@ jobs:
   nix-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
         with:
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.local/state/nix
+            /nix/store
+          key: nix-lint-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            nix-lint-${{ runner.os }}-
 
       - name: Check formatting
         run: |
@@ -56,11 +65,20 @@ jobs:
       matrix:
         host: [honor, pro]
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/checkout@v7
+
+      - uses: cachix/install-nix-action@v31
         with:
           persist-credentials: false
 
-      - uses: DeterminateSystems/nix-installer-action@e50d5f73bfe71c2dd0aa4218de8f4afa59f8f81d # v16
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.local/state/nix
+            /nix/store
+          key: nix-build-${{ runner.os }}-${{ hashFiles('flake.lock') }}
+          restore-keys: |
+            nix-build-${{ runner.os }}-
 
       - name: Build ${{ matrix.host }}
         run: |
