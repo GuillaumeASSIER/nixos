@@ -925,8 +925,8 @@ in {
     services.hypridle.enable = true;
 
     services.xserver.xkb = {
-      layout = "fr,us";
-      options = "grp:win_space_toggle,compose:caps";
+      layout = lib.mkDefault "fr,us";
+      options = lib.mkDefault "grp:win_space_toggle,compose:caps";
     };
 
     environment.sessionVariables = {
