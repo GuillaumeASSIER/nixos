@@ -6,10 +6,10 @@ This is a NixOS configuration project managed with flakes, using the [dendritic 
 
 Personal NixOS configuration for two laptops:
 - **honor**: Intel-based laptop (GNOME + GDM + Wayland)
-- **pro**: AMD-based laptop (KDE Plasma)
+- **pro**: AMD-based laptop (GNOME + GDM + Wayland)
 
 Features:
-- **Desktop**: GNOME (honor) / KDE Plasma (pro)
+- **Desktop**: GNOME (honor) / GNOME (pro)
 - **Audio**: PipeWire with PulseAudio passthrough
 - **Virtualisation / Containers**: Docker + libvirt + Podman
 - **Security**: AppArmor, fail2ban, firewall, auditd
