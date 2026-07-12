@@ -46,6 +46,7 @@ in {
 
       networking.hostName = "honor";
       networking.networkmanager.enable = true;
+      networking.firewall.allowedTCPPorts = [3000];
 
       time.timeZone = "Europe/Paris";
 
