@@ -23,7 +23,6 @@ in {
           qemu
           honor-hardware
           honor-disko
-          hyprland-session
         ]
         ++ [
           inputs.disko.nixosModules.default
@@ -32,6 +31,7 @@ in {
 
       nixpkgs.hostPlatform = "x86_64-linux";
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [inputs.gassier-nix-pkgs.overlays.default];
 
       boot = {
         kernelPackages = pkgs.linuxPackages_latest;
@@ -108,6 +108,7 @@ in {
         python314Packages.pip
         nodejs
         bun
+        pnpm
         go
 
         podman
@@ -131,6 +132,7 @@ in {
         vlc
         element-desktop
         orca-slicer
+        qbittorrent
       ];
 
       programs = {
@@ -183,8 +185,6 @@ in {
           sandbox = true;
         };
       };
-
-
     };
 
     homeManager.heap = {
@@ -192,9 +192,11 @@ in {
       inputs,
       ...
     }: {
-      imports = with homeManager; [codium shell ssh desktop hyprland-session];
+      imports = with homeManager; [codium shell ssh desktop];
 
       home.stateVersion = "26.05";
+
+      nixpkgs.overlays = [inputs.gassier-nix-pkgs.overlays.default];
 
       home.packages = with pkgs; [
         gh
@@ -205,7 +207,10 @@ in {
         emote
         rtk
         appflowy
-        inputs.gassier-nix-pkgs.packages.x86_64-linux.mimo-code
+        mimo-code
+        pi-coding-agent
+        murmure
+        torlink
       ];
 
       dconf = {

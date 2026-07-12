@@ -37,6 +37,10 @@
               install_url = "https://addons.mozilla.org/firefox/downloads/latest/auto-tab-discard/latest.xpi";
               installation_mode = "force_installed";
             };
+            "fingerprint-defender@digitalfracture.co.uk" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/fingerprint-defender/latest.xpi";
+              installation_mode = "force_installed";
+            };
           };
 
           Preferences = {
