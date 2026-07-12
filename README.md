@@ -3,10 +3,10 @@
 Personal NixOS configuration for two laptops:
 
 - **honor**: Intel-based laptop (GNOME + GDM + Wayland)
-- **pro**: AMD-based laptop (KDE Plasma)
+- **pro**: AMD-based laptop (GNOME + GDM + Wayland)
 
 Features:
-- **Desktop**: GNOME (honor) / KDE Plasma (pro)
+- **Desktop**: GNOME (honor) / GNOME (pro)
 - **Audio**: PipeWire with PulseAudio passthrough
 - **Virtualisation**: Docker + libvirt + Podman
 - **Security**: AppArmor, fail2ban, firewall, auditd
@@ -67,7 +67,6 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
     ├── k3s.nix            # K3s server
     ├── office.nix         # LibreOffice, Thunderbird, etc.
     ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
-    ├── plasma.nix         # KDE Plasma + SDDM
     ├── secureboot.nix     # Lanzaboote + Secure Boot
     ├── security.nix       # AppArmor, fail2ban, firewall
     │
@@ -107,7 +106,6 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
     ├── k3s.nix            # K3s server
     ├── office.nix         # LibreOffice, Thunderbird, etc.
     ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
-    ├── plasma.nix         # KDE Plasma + SDDM
     ├── secureboot.nix     # Lanzaboote + Secure Boot
     ├── security.nix       # AppArmor, fail2ban, firewall
     │
