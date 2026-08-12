@@ -31,7 +31,13 @@ in {
 
       nixpkgs.hostPlatform = "x86_64-linux";
       nixpkgs.config.allowUnfree = true;
-      nixpkgs.overlays = [inputs.gassier-nix-pkgs.overlays.default];
+      nixpkgs.overlays = [
+        inputs.gassier-nix-pkgs.overlays.default
+        inputs.devenv.overlays.default
+        (final: prev: {
+          herdr = inputs.nixpkgs-unstable.legacyPackages.${final.stdenv.hostPlatform.system}.herdr;
+        })
+      ];
 
       boot = {
         kernelPackages = pkgs.linuxPackages_latest;
@@ -89,6 +95,7 @@ in {
         gh
         nix-index
         git-lfs
+        devenv
 
         kubectl
         kubecolor
@@ -134,6 +141,9 @@ in {
         element-desktop
         orca-slicer
         qbittorrent
+
+        brave
+        herdr
       ];
 
       programs = {
@@ -210,6 +220,7 @@ in {
         appflowy
         mimo-code
         pi-coding-agent
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.opencode
         murmure
         torlink
       ];
