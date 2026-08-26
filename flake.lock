@@ -244,11 +244,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1786546674,
-        "narHash": "sha256-ReOqLNcOf8v2HGnWPkFqvX+8kjkK0AQfnMp54H2AiqI=",
+        "lastModified": 1787000943,
+        "narHash": "sha256-5KBMEdRTdBrElGdxc8N1TheZ/QPDHkAG3GXHcKI1TIs=",
         "owner": "GuillaumeASSIER",
         "repo": "gassier-nix-pkgs",
-        "rev": "5c6872c125625b38960c84e3deaf6e4f2ccb8b03",
+        "rev": "251452c5193eb07f7b5ef8806b4aa4e4d0ec8238",
         "type": "github"
       },
       "original": {
