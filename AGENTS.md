@@ -51,41 +51,38 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
 .
 ├── flake.nix              # Minimal entry point (flake-parts + import-tree)
 ├── flake.lock             # Dependency lock file
-├── disko/
-│   ├── honor.nix          # Disko partition config for honor (standalone, CLI usage)
-│   └── pro.nix            # Disko partition config for pro (standalone, CLI usage)
-├── patches/
-│   └── pam.nix            # Patched upstream pam.nix (2656 lines)
 └── modules/               # Auto-imported by import-tree — each file is a flake-parts module
     ├── meta.nix           # Top-level options (emails, API keys, vars)
     ├── infra.nix          # configurations.nixos, nixosConfigurations, HM, devshell
     │
     ├── # ── NixOS feature modules (flake.modules.nixos.*) ──
     ├── browser.nix        # Firefox & Chromium policies
-    ├── core.nix           # rtkit, ssh, netbird, zsh
-    ├── debug.nix          # htop, btop, wireshark, etc.
-    ├── gnome.nix          # GNOME, GDM, PipeWire, Flatpak, fonts, extensions
+    ├── core.nix           # rtkit, ssh (hardened), netbird, zsh
+    ├── debug.nix          # htop, btop, nmap, mtr, etc.
+    ├── gnome.nix          # GNOME, GDM, PipeWire, fonts
+    ├── hyprland.nix       # Hyprland session (experimental, not imported)
     ├── ide.nix            # git, lazygit, opencode
     ├── intel.nix          # Intel GPU tools (honor only)
     ├── journald.nix       # Journald configuration
-    ├── k3s.nix            # K3s server
-
+    ├── k3s.nix            # K3s server (hardened kubeconfig/firewall)
+    ├── ly.nix             # Ly display manager (experimental, not imported)
     ├── office.nix         # LibreOffice, Thunderbird, etc.
+    ├── qemu.nix           # libvirt QEMU extras (swtpm, qemu_kvm)
     ├── secureboot.nix     # Lanzaboote + Secure Boot
     ├── security.nix       # AppArmor, fail2ban, firewall
     │
     ├── # ── Home-Manager feature modules (flake.modules.homeManager.*) ──
     ├── codium.nix         # VSCodium config (HM)
     ├── shell.nix          # tmux + zsh + zoxide (HM)
-    ├── ssh.nix            # SSH client config (HM)
+    ├── ssh.nix            # SSH config (HM)
     │
-    ├── # ── Host assemblies (configurations.nixos.<host>) ──
-    ├── honor.nix          # Host honor — composes NixOS + HM modules
-    ├── pro.nix            # Host pro — composes NixOS + HM modules
-    ├── honor-disko.nix    # Disko inline (mirrors disko/honor.nix)
-    ├── honor-hardware.nix # Hardware config honor (DSDT, kernel modules)
-    ├── pro-disko.nix      # Disko inline (mirrors disko/pro.nix)
-    └── pro-hardware.nix   # Hardware config pro (AMD ROCm)
+    └── # ── Host assemblies (configurations.nixos.<host>) ──
+        ├── honor.nix          # Host honor — composes NixOS + HM modules
+        ├── pro.nix            # Host pro — composes NixOS + HM modules
+        ├── honor-disko.nix    # Disko partitioning honor (inline)
+        ├── honor-hardware.nix # Hardware config honor (DSDT overlay, Intel)
+        ├── pro-disko.nix      # Disko partitioning pro (inline)
+        └── pro-hardware.nix   # Hardware config pro (AMD ROCm)
 ```
 
 ## Common Commands

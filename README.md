@@ -47,26 +47,23 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
 .
 ├── flake.nix              # Minimal entry point (flake-parts + import-tree)
 ├── flake.lock             # Dependency lock file
-├── disko/
-│   ├── honor.nix          # Disko partition config for honor (standalone, CLI usage)
-│   └── pro.nix            # Disko partition config for pro (standalone, CLI usage)
-├── patches/
-│   └── pam.nix            # Patched upstream pam.nix (2656 lines)
 └── modules/               # Auto-imported by import-tree — each file is a flake-parts module
     ├── meta.nix           # Top-level options (emails, API keys, vars)
     ├── infra.nix          # configurations.nixos, nixosConfigurations, HM, devshell
     │
     ├── # ── NixOS feature modules (flake.modules.nixos.*) ──
     ├── browser.nix        # Firefox & Chromium policies
-    ├── core.nix           # rtkit, ssh, netbird, zsh, firewall
-    ├── debug.nix          # htop, btop, wireshark, etc.
-    ├── desktop.nix        # GNOME, GDM, PipeWire, Flatpak
+    ├── core.nix           # rtkit, ssh (hardened), netbird, zsh
+    ├── debug.nix          # htop, btop, nmap, mtr, etc.
+    ├── gnome.nix          # GNOME, GDM, PipeWire, fonts
+    ├── hyprland.nix       # Hyprland session (experimental, not imported)
     ├── ide.nix            # git, lazygit, opencode
     ├── intel.nix          # Intel GPU tools
     ├── journald.nix       # Journald configuration
-    ├── k3s.nix            # K3s server
+    ├── k3s.nix            # K3s server (hardened kubeconfig/firewall)
+    ├── ly.nix             # Ly display manager (experimental, not imported)
     ├── office.nix         # LibreOffice, Thunderbird, etc.
-    ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
+    ├── qemu.nix           # libvirt QEMU extras (swtpm, qemu_kvm)
     ├── secureboot.nix     # Lanzaboote + Secure Boot
     ├── security.nix       # AppArmor, fail2ban, firewall
     │
@@ -75,52 +72,13 @@ This repo follows the [**dendritic pattern**](https://github.com/mightyiam/dendr
     ├── shell.nix          # tmux + zsh + zoxide (HM)
     ├── ssh.nix            # SSH config (HM)
     │
-    ├── # ── Host assemblies (configurations.nixos.<host>) ──
-    ├── honor.nix          # Host honor — composes NixOS + HM modules
-    ├── pro.nix            # Host pro — composes NixOS + HM modules
-    ├── honor-disko.nix    # Disko inline (mirrors disko/honor.nix)
-    ├── honor-hardware.nix # Hardware config honor
-    ├── pro-disko.nix      # Disko inline (mirrors disko/pro.nix)
-    └── pro-hardware.nix  # Hardware config pro
-```
-.
-├── flake.nix              # Minimal entry point (flake-parts + import-tree)
-├── flake.lock             # Dependency lock file
-├── disko/
-│   ├── honor.nix          # Disko partition config for honor (standalone, CLI usage)
-│   └── pro.nix            # Disko partition config for pro (standalone, CLI usage)
-├── patches/
-│   └── pam.nix            # Patched upstream pam.nix (2656 lines)
-└── modules/
-    ├── meta.nix           # Top-level options (emails, API keys, vars)
-    ├── infra.nix          # configurations.nixos, nixosConfigurations, HM, devshell
-    │
-    ├── # ── NixOS feature modules ──
-    ├── browser.nix        # Firefox & Chromium policies
-    ├── core.nix           # rtkit, ssh, netbird, zsh, firewall
-    ├── debug.nix          # htop, btop, wireshark, etc.
-    ├── desktop.nix        # GNOME, GDM, PipeWire, Flatpak
-    ├── ide.nix            # git, lazygit, opencode
-    ├── intel.nix          # Intel GPU tools
-    ├── journald.nix       # Journald configuration
-    ├── k3s.nix            # K3s server
-    ├── office.nix         # LibreOffice, Thunderbird, etc.
-    ├── pam-fix.nix        # Fix PAM/AppArmor (disables stock pam.nix)
-    ├── secureboot.nix     # Lanzaboote + Secure Boot
-    ├── security.nix       # AppArmor, fail2ban, firewall
-    │
-    ├── # ── Home-Manager feature modules ──
-    ├── codium.nix         # VSCodium config (HM)
-    ├── shell.nix          # tmux + zsh + zoxide (HM)
-    ├── ssh.nix            # SSH config (HM)
-    │
-    ├── # ── Host assemblies ──
-    ├── honor.nix          # Host honor + config specifique
-    ├── pro.nix            # Host pro + config specifique
-    ├── honor-disko.nix    # Disko inline (mirrors disko/honor.nix)
-    ├── honor-hardware.nix # Hardware config honor
-    ├── pro-disko.nix      # Disko inline (mirrors disko/pro.nix)
-    └── pro-hardware.nix   # Hardware config pro
+    └── # ── Host assemblies (configurations.nixos.<host>) ──
+        ├── honor.nix          # Host honor — composes NixOS + HM modules
+        ├── pro.nix            # Host pro — composes NixOS + HM modules
+        ├── honor-disko.nix    # Disko partitioning honor (inline)
+        ├── honor-hardware.nix # Hardware config honor (DSDT overlay, Intel)
+        ├── pro-disko.nix      # Disko partitioning pro (inline)
+        └── pro-hardware.nix   # Hardware config pro (AMD ROCm)
 ```
 
 ## Building
@@ -144,9 +102,9 @@ nix-shell -p git vscodium
 git clone git@github.com:GuillaumeASSIER/nixos.git
 cd nixos/
 
-# Format the disk (e.g. for pro)
+# Partition and mount the disk inline from the flake (e.g. for pro)
 sudo nix --experimental-features "nix-command flakes" \
-    run github:nix-community/disko/latest -- --mode destroy,format,mount disko/pro.nix
+    run github:nix-community/disko/latest -- --mode destroy,format,mount --flake .#pro
 
 # Verify mounts
 mount | grep /mnt
@@ -155,4 +113,4 @@ mount | grep /mnt
 sudo nixos-install --flake .#pro
 ```
 
-> **Note:** The `disko/` directory contains standalone disko config files usable directly with the `disko` CLI. The `modules/*-disko.nix` files contain the same configs inline for the NixOS module system. If you modify partitioning, update both.
+> **Note:** Partitioning lives inline in the host assemblies (`modules/*-disko.nix`) via the disko NixOS module — single source of truth. The `disko/` standalone files were removed; use `--flake .#<host>` with the disko CLI instead.

@@ -1,8 +1,4 @@
-{
-  config,
-  inputs,
-  ...
-}: let
+{config, ...}: let
   inherit (config.flake.modules) nixos homeManager;
 in {
   configurations.nixos.pro = {
@@ -192,7 +188,7 @@ in {
       networking.firewall = {
         enable = true;
         allowPing = true;
-        allowedTCPPorts = [ 8000 8001 ];
+        allowedTCPPorts = [8000 8001];
         allowedUDPPorts = [];
       };
 
@@ -203,13 +199,6 @@ in {
         shell = pkgs.zsh;
       };
       users.groups.guillaume = {};
-
-      swapDevices = [
-        {
-          device = "/swapfile";
-          size = 8192;
-        }
-      ];
 
       system.stateVersion = "26.05";
 
@@ -237,6 +226,20 @@ in {
       imports = with homeManager; [codium shell ssh desktop];
 
       home.stateVersion = "26.05";
+
+      dconf.settings."org/gnome/shell" = {
+        disable-user-extensions = false;
+        enabled-extensions = with pkgs.gnomeExtensions;
+          map (p: p.extensionUuid) [
+            appindicator
+            blur-my-shell
+            caffeine
+            dash-to-dock
+            just-perfection
+            status-tray
+            vertical-workspaces
+          ];
+      };
 
       xdg.configFile."opencode/opencode.json" = {
         source = let
@@ -290,10 +293,22 @@ in {
               description = "Coding-optimized model served via the internal LiteLLM gateway.";
               default_reasoning_level = "medium";
               supported_reasoning_levels = [
-                {effort = "low"; description = "Fast responses with lighter reasoning";}
-                {effort = "medium"; description = "Balances speed and reasoning depth for everyday tasks";}
-                {effort = "high"; description = "Greater reasoning depth for complex problems";}
-                {effort = "xhigh"; description = "Extra high reasoning depth for complex problems";}
+                {
+                  effort = "low";
+                  description = "Fast responses with lighter reasoning";
+                }
+                {
+                  effort = "medium";
+                  description = "Balances speed and reasoning depth for everyday tasks";
+                }
+                {
+                  effort = "high";
+                  description = "Greater reasoning depth for complex problems";
+                }
+                {
+                  effort = "xhigh";
+                  description = "Extra high reasoning depth for complex problems";
+                }
               ];
               shell_type = "shell_command";
               visibility = "list";
@@ -307,7 +322,10 @@ in {
               default_verbosity = "medium";
               apply_patch_tool_type = "freeform";
               web_search_tool_type = "text";
-              truncation_policy = {mode = "tokens"; limit = 10000;};
+              truncation_policy = {
+                mode = "tokens";
+                limit = 10000;
+              };
               supports_parallel_tool_calls = true;
               supports_image_detail_original = false;
               context_window = 32768;
@@ -331,9 +349,10 @@ in {
         appflowy
         sqlite-interactive
         inputs.gassier-nix-pkgs.packages.x86_64-linux.godap
-        inputs.gassier-nix-pkgs.packages.x86_64-linux.mimo-code
-        inputs.gassier-nix-pkgs.packages.x86_64-linux.codex
-        inputs.gassier-nix-pkgs.packages.x86_64-linux.opencode
+        inputs.llm-agents.packages.x86_64-linux.mimo-code
+        inputs.llm-agents.packages.x86_64-linux.opencode
+        inputs.llm-agents.packages.x86_64-linux.omp
+        inputs.llm-agents.packages.x86_64-linux.codex
         inputs.gassier-nix-pkgs.packages.x86_64-linux.pi-coding-agent
       ];
 
