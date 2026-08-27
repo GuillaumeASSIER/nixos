@@ -27,7 +27,16 @@ in {
         ++ [
           inputs.disko.nixosModules.default
           inputs.lanzaboote.nixosModules.lanzaboote
+          inputs.sops-nix.nixosModules.sops
         ];
+
+      sops = {
+        age.keyFile = "/var/lib/sops-nix/key.txt";
+        secrets.git-email = {
+          sopsFile = ../secrets/git-email.yaml;
+          owner = "heap";
+        };
+      };
 
       nixpkgs.hostPlatform = "x86_64-linux";
       nixpkgs.config.allowUnfree = true;
@@ -151,8 +160,7 @@ in {
           enable = true;
           config = {
             user.name = "GuillaumeAssier";
-            user.email = config.heap.email;
-            pull.rebase = false;
+            include.path = "~/.git-email-config";
             init.defaultBranch = "main";
           };
         };
@@ -241,9 +249,9 @@ in {
           enable = true;
           settings = {
             user.name = "GuillaumeAssier";
-            user.email = config.heap.email;
             pull.rebase = false;
             init.defaultBranch = "main";
+            include.path = "~/.git-email-config";
           };
         };
 
@@ -297,6 +305,10 @@ in {
           ];
         };
       };
+
+      home.activation.gitEmail = ''
+        install -m 600 /run/secrets/git-email ~/.git-email-config
+      '';
     };
   };
 }

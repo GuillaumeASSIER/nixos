@@ -21,6 +21,10 @@
     };
     gassier-nix-pkgs.url = "github:GuillaumeASSIER/gassier-nix-pkgs";
     devenv.url = "github:cachix/devenv/latest";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs:
