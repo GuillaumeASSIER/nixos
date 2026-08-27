@@ -2,13 +2,7 @@
   flake.modules.nixos.desktop = {pkgs, ...}: {
     services = {
       displayManager.gdm.enable = true;
-      desktopManager.gnome = {
-        enable = true;
-        extraGSettingsOverrides = ''
-          [org.gnome.shell]
-          enabled-extensions=['appindicator-support@rgcjonas.gmail.com','blur-my-shell@aunetx.de','status-tray@elmopl.rs','vertical-workspaces@G-dH','caffeine@lysakovas','dash-to-dock@micxgx.gmail.com','justPerfection@agarr.dev','net-speed-indicator@schlomp2000.gmail.com']
-        '';
-      };
+      desktopManager.gnome.enable = true;
       printing.enable = true;
     };
 
@@ -53,18 +47,24 @@
       };
     };
 
-    environment.systemPackages = builtins.attrValues {
-      inherit (pkgs.gnomeExtensions) appindicator blur-my-shell caffeine dash-to-dock just-perfection status-tray vertical-workspaces;
-    } ++ [
-      pkgs.gnome-tweaks
-    ];
+    environment.systemPackages =
+      builtins.attrValues {
+        inherit (pkgs.gnomeExtensions) appindicator blur-my-shell caffeine dash-to-dock just-perfection status-tray vertical-workspaces;
+      }
+      ++ [
+        pkgs.gnome-tweaks
+      ];
 
     services.udev.packages = with pkgs; [
       gnome-settings-daemon
     ];
   };
 
-  flake.modules.homeManager.desktop = {pkgs, config, lib, ...}: {
+  flake.modules.homeManager.desktop = {
+    pkgs,
+    config,
+    ...
+  }: {
     home.pointerCursor = {
       package = pkgs.adwaita-icon-theme;
       name = "Adwaita";

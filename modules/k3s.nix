@@ -3,18 +3,16 @@
     services.k3s = {
       enable = true;
       role = "server";
-      extraFlags = ["--write-kubeconfig-mode 644"];
+      extraFlags = ["--write-kubeconfig-mode 600"];
     };
 
     networking.firewall = {
       allowedTCPPorts = [
         6443 # k3s API server
         10250 # kubelet API
-        2379 # etcd client
-        2380 # etcd peer
       ];
       allowedUDPPorts = [
-        8472 # flannel VXLAN
+        8472 # flannel VXLAN (pod-to-pod, CNI-managed)
       ];
       extraCommands = ''
         # Allow pod-to-pod traffic via CNI interfaces

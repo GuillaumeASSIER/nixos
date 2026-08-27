@@ -10,3 +10,6 @@ result-*
 .vscode
 
 opencode.json
+
+# mimocode local artifacts
+.mimocode/

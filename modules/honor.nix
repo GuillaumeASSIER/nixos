@@ -32,7 +32,6 @@ in {
       nixpkgs.hostPlatform = "x86_64-linux";
       nixpkgs.config.allowUnfree = true;
       nixpkgs.overlays = [
-        inputs.gassier-nix-pkgs.overlays.default
         inputs.devenv.overlays.default
         (final: prev: {
           herdr = inputs.nixpkgs-unstable.legacyPackages.${final.stdenv.hostPlatform.system}.herdr;
@@ -77,6 +76,7 @@ in {
 
       virtualisation.docker.enable = true;
       virtualisation.libvirtd.enable = true;
+      fonts.packages = [pkgs.nerd-fonts.fira-code];
 
       environment.systemPackages = with pkgs; [
         neovim
@@ -88,7 +88,6 @@ in {
         fzf
         vhs
         sops
-        mullvad-vpn
         proton-vpn
         fastfetch
         act
@@ -173,12 +172,12 @@ in {
       };
       users.groups.heap = {};
 
-      swapDevices = [
-        {
-          device = "/swapfile";
-          size = 16384;
-        }
-      ];
+      zramSwap = {
+        enable = true;
+        algorithm = "zstd";
+        memoryPercent = 100;
+        priority = 100;
+      };
 
       system.stateVersion = "25.11";
 
@@ -207,8 +206,6 @@ in {
 
       home.stateVersion = "26.05";
 
-      nixpkgs.overlays = [inputs.gassier-nix-pkgs.overlays.default];
-
       home.packages = with pkgs; [
         gh
         discord
@@ -218,11 +215,11 @@ in {
         emote
         rtk
         appflowy
-        mimo-code
-        pi-coding-agent
-        inputs.gassier-nix-pkgs.packages.x86_64-linux.opencode
-        murmure
-        torlink
+        inputs.llm-agents.packages.x86_64-linux.mimo-code
+        inputs.llm-agents.packages.x86_64-linux.omp
+        inputs.llm-agents.packages.x86_64-linux.opencode
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.murmure
+        inputs.gassier-nix-pkgs.packages.x86_64-linux.torlink
       ];
 
       dconf = {
@@ -233,6 +230,7 @@ in {
             enabled-extensions = with pkgs.gnomeExtensions; [
               appindicator.extensionUuid
               blur-my-shell.extensionUuid
+              caffeine.extensionUuid
             ];
           };
         };

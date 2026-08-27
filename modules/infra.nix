@@ -37,7 +37,7 @@
             {
               nixpkgs.config = {
                 allowUnfree = true;
-                permittedInsecurePackages = ["electron-39.8.10"];
+                allowInsecurePredicate = p: (p.pname or p.name) == "electron";
               };
               home-manager = {
                 useGlobalPkgs = false;
@@ -47,10 +47,8 @@
                   inherit inputs;
                 };
                 sharedModules = [
-                  ({ config, lib, ... }: {
-                    nixpkgs.config = {
-                      allowUnfree = true;
-                    };
+                  (_: {
+                    nixpkgs.config.allowUnfree = true;
                   })
                 ];
                 users = lib.flip lib.mapAttrs cfg.homeManager (

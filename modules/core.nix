@@ -16,7 +16,6 @@
         AllowAgentForwarding = "no";
         PermitTunnel = "no";
         GatewayPorts = "no";
-        Protocol = 2;
       };
     };
 
